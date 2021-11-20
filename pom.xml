@@ -154,6 +154,7 @@
                 <configuration>
                     <logViolationsToConsole>true</logViolationsToConsole>
                     <checkstyleRules>
+                        <!-- see https://checkstyle.sourceforge.io/ -->
                         <module name="Checker">
                             <property name="charset" value="UTF-8" />
                             <module name="NewlineAtEndOfFile" />
@@ -389,5 +390,12 @@
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
         </repository>
     </repositories>
+    <distributionManagement>
+        <repository>
+            <id>aliyun-public</id>
+            <name>aliyun maven</name>
+            <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
+        </repository>
+    </distributionManagement>
 
 </project>
