@@ -315,6 +315,9 @@
                         <configuration>
 <!--                            <skipRepositoryCheck>true</skipRepositoryCheck>-->
                             <hooks>
+                                <pre-commit>
+                                    echo 'pre-commit......'
+                                </pre-commit>
                                 <pre-push>set -e
                                     echo --------------------[begin]---------------------
 
