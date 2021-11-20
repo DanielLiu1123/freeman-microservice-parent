@@ -204,7 +204,7 @@
                                     <property name="allowedAnnotations"
                                               value="Override, Test, Before, After, BeforeClass, AfterClass,
                                               Parameterized, Parameters, Bean, PostConstruct"/>
-                                    <property name="ignoreMethodNamesRegex" value="^set[A-Z].*|^get[A-Z].*|main"/>
+                                    <property name="ignoreMethodNamesRegex" value="^set[A-Z].*|^get[A-Z].*|main|init"/>
                                     <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF"/>
                                 </module>
                                 <module name="TrailingComment" />
