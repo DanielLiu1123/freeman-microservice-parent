@@ -27,7 +27,10 @@
         <!-- plugins -->
         <maven-jacoco.version>0.8.7</maven-jacoco.version>
         <maven-checkstyle.version>3.1.2</maven-checkstyle.version>
+        <checkstyle.version>9.1</checkstyle.version>
         <flatten-maven.version>1.2.7</flatten-maven.version>
+        <githook-maven.version>1.0.5</githook-maven.version>
+        <findbugs-maven.version>3.0.5</findbugs-maven.version>
 
         <!-- dependencies -->
         <spring-cloud.version>2020.0.3</spring-cloud.version>
@@ -141,12 +144,19 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${maven-checkstyle.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <logViolationsToConsole>true</logViolationsToConsole>
                     <checkstyleRules>
                         <module name="Checker">
                             <property name="charset" value="UTF-8" />
-<!--                            <module name="NewlineAtEndOfFile" />-->
+                            <module name="NewlineAtEndOfFile" />
                             <module name="FileLength">
                                 <property name="max" value="1500" />
                             </module>
@@ -158,6 +168,12 @@
                                           value="^implements.*|^extends.*|^package.*|^import.*|a href|href|http://|https://|ftp://"/>
                             </module>
                             <module name="TreeWalker">
+                                <module name="AvoidNoArgumentSuperConstructorCall"/>
+                                <module name="CovariantEquals"/>
+                                <module name="DefaultComesLast"/>
+                                <module name="EqualsHashCode"/>
+                                <module name="NoFinalizer"/>
+                                <module name="ParameterAssignment"/>
                                 <module name="SuppressWarningsHolder" />
                                 <module name="IllegalImport" />
                                 <module name="RedundantImport" />
@@ -168,7 +184,7 @@
                                     <message value="class comment: miss javadoc comment." key="javadoc.missing" />
                                 </module>
                                 <module name="JavadocMethod">
-                                    <property name="scope" value="public"/>
+                                    <property name="accessModifiers" value="public"/>
                                     <property name="allowMissingParamTags" value="true"/>
                                     <property name="allowMissingReturnTag" value="true"/>
                                     <property name="allowedAnnotations"
@@ -202,9 +218,6 @@
                                 <module name="ConstantName" />
                                 <module name="ArrayTypeStyle" />
                                 <module name="UpperEll" />
-<!--                                <module name="LineLength">-->
-<!--                                    <property name="max" value="120" />-->
-<!--                                </module>-->
                                 <module name="MethodLength">
                                     <property name="tokens" value="METHOD_DEF" />
                                     <property name="max" value="100" />
@@ -230,15 +243,19 @@
                                 <module name="NeedBraces" />
                                 <module name="RightCurly" />
                                 <module name="EmptyStatement" />
-                                <module name="EqualsHashCode" />
                                 <module name="HiddenField">
                                     <property name="tokens" value="VARIABLE_DEF" />
                                 </module>
                                 <module name="IllegalInstantiation" />
                                 <module name="InnerAssignment" />
                                 <module name="MagicNumber">
-                                    <property name="ignoreNumbers" value="0, 1, 2, 3, 4, 8, 10, 16" />
+                                    <property name="ignoreNumbers" value="-1, 0, 0.5, 1, 2, 3, 4, 8, 10, 16" />
                                     <property name="ignoreAnnotation" value="true" />
+                                    <property name="ignoreFieldDeclaration" value="true" />
+                                    <property name="ignoreHashCodeMethod" value="true" />
+                                    <property name="ignoreAnnotationElementDefaults" value="true" />
+                                    <property name="constantWaiverParentToken"
+                                              value="ASSIGN,ARRAY_INIT,EXPR,MINUS,TYPECAST,ELIST,DIV,PLUS"/>
                                 </module>
                                 <module name="MissingSwitchDefault" />
                                 <module name="SimplifyBooleanExpression" />
@@ -256,9 +273,6 @@
                                 <module name="NestedIfDepth">
                                     <property name="max" value="3" />
                                 </module>
-                                <module name="UncommentedMain">
-                                    <property name="excludedClasses" value=".*Application | .*App" />
-                                </module>
                                 <module name="Regexp">
                                     <property name="format" value="System\.out\.println" />
                                     <property name="illegalPattern" value="true" />
@@ -274,6 +288,17 @@
                             </module>
                         </module>
                     </checkstyleRules>
+                </configuration>
+            </plugin>
+            <!-- findbugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs-maven.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <omitVisitors>FindReturnRef,DumbMethods,DefaultEncodingDetector,SwitchFallthrough</omitVisitors>
                 </configuration>
             </plugin>
             <!-- flatten -->
@@ -306,19 +331,15 @@
             <plugin>
                 <groupId>io.github.phillipuniverse</groupId>
                 <artifactId>githook-maven-plugin</artifactId>
-                <version>1.0.5</version>
+                <version>${githook-maven.version}</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>install</goal>
                         </goals>
                         <configuration>
-<!--                            <skipRepositoryCheck>true</skipRepositoryCheck>-->
+                            <skipRepositoryCheck>true</skipRepositoryCheck>
                             <hooks>
-                                <pre-commit>
-                                    echo 'running validation build...'
-                                    echo 'pre-commit......'
-                                </pre-commit>
                                 <pre-push>set -e
                                     echo --------------------[begin]---------------------
 
