@@ -27,6 +27,7 @@
         <!-- plugins -->
         <maven-jacoco.version>0.8.7</maven-jacoco.version>
         <maven-checkstyle.version>3.1.2</maven-checkstyle.version>
+        <flatten-maven.version>1.2.7</flatten-maven.version>
 
         <!-- dependencies -->
         <spring-cloud.version>2020.0.3</spring-cloud.version>
@@ -279,7 +280,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.2.7</version>
+                <version>${flatten-maven.version}</version>
                 <executions>
                     <execution>
                         <id>flatten</id>
@@ -312,7 +313,7 @@
                             <goal>install</goal>
                         </goals>
                         <configuration>
-                            <skipRepositoryCheck>true</skipRepositoryCheck>
+<!--                            <skipRepositoryCheck>true</skipRepositoryCheck>-->
                             <hooks>
                                 <pre-push>set -e
                                     echo --------------------[begin]---------------------
