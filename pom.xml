@@ -30,7 +30,7 @@
         <checkstyle.version>9.1</checkstyle.version>
         <flatten-maven.version>1.2.7</flatten-maven.version>
         <githook-maven.version>1.0.5</githook-maven.version>
-        <findbugs-maven.version>3.0.5</findbugs-maven.version>
+        <spotbugs-maven.version>4.5.0.0</spotbugs-maven.version>
 
         <!-- dependencies -->
         <spring-cloud.version>2020.0.3</spring-cloud.version>
@@ -291,16 +291,11 @@
                     </checkstyleRules>
                 </configuration>
             </plugin>
-            <!-- findbugs -->
+            <!-- spotbugs -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs-maven.version}</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <omitVisitors>FindReturnRef,DumbMethods,DefaultEncodingDetector,SwitchFallthrough</omitVisitors>
-                </configuration>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven.version}</version>
             </plugin>
             <!-- flatten -->
             <plugin>
@@ -341,39 +336,33 @@
                         <configuration>
                             <skipRepositoryCheck>true</skipRepositoryCheck>
                             <hooks>
-                                <pre-push>set -e
-                                    echo --------------------[begin]---------------------
-
-
-                                    echo '\n\n\n------------------------------------------------'
-                                    echo 正在检查是否能通过编译...
-                                    echo '------------------------------------------------\n\n\n'
-
+                                <pre-push>
+                                    #!/bin/bash
+                                    set -e
+                                    function showGreen() {
+                                        echo -e "\033[32m$1\033[0m"
+                                    }
+                                    function showBlue() {
+                                        echo -e "\033[1;34m$1\033[0m"
+                                    }
+                                    showBlue '--------------------[begin]---------------------'
+                                    showGreen "------------------------------------------------"
+                                    showGreen '正在检查是否能通过编译...'
+                                    showGreen "------------------------------------------------"
                                     mvn clean compile
-
-
-                                    echo '\n\n\n------------------------------------------------'
-                                    echo 正在检查代码格式...
-                                    echo '------------------------------------------------\n\n\n'
-
+                                    showGreen "------------------------------------------------"
+                                    showGreen '正在检查代码格式...'
+                                    showGreen "------------------------------------------------"
                                     mvn checkstyle:check
-
-
-                                    echo '\n\n\n------------------------------------------------'
-                                    echo 正在检查是否有明显bugs...
-                                    echo '------------------------------------------------\n\n\n'
-
-                                    mvn findbugs:check
-
-
-                                    echo '\n\n\n------------------------------------------------'
-                                    echo 正在检查是否能通过单元测试...
-                                    echo '------------------------------------------------\n\n\n'
-
+                                    showGreen "------------------------------------------------"
+                                    showGreen '正在检查是否有明显bug...'
+                                    showGreen "------------------------------------------------"
+                                    mvn spotbugs:check
+                                    showGreen "------------------------------------------------"
+                                    showGreen '正在检查是否能通过单元测试...'
+                                    showGreen "------------------------------------------------"
                                     mvn test -DskipTests=false
-
-
-                                    echo --------------------[ end ]---------------------
+                                    showBlue '--------------------[ end ]---------------------'
                                 </pre-push>
                             </hooks>
                         </configuration>
