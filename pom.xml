@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.6</version>
+        <relativePath/> <!-- 始终从仓库获取 -->
+    </parent>
+
+    <groupId>cn.liumouren</groupId>
+    <artifactId>freeman-microservice-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <inceptionYear>2021</inceptionYear>
+    <description>freeman微服务父pom</description>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- plugins -->
+        <maven-jacoco.version>0.8.7</maven-jacoco.version>
+        <maven-checkstyle.version>3.1.2</maven-checkstyle.version>
+
+        <!-- dependencies -->
+        <spring-cloud.version>2020.0.3</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <fastjson.version>1.2.78</fastjson.version>
+        <hutool.version>5.7.16</hutool.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- 统一工具类 hutool https://www.hutool.cn/ -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- 统一 JSON 序列化工具 fastjson  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- 我们让 maven 生命周期插件跟着 spring boot 的版本走 -->
+            <!-- clean -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+            </plugin>
+            <!-- compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!-- test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>@{argLine} -Xms512m -Xmx512m</argLine>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+            <!-- deploy -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+
+            <!-- 单元测试覆盖率 -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven-jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- source -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle.version}</version>
+                <configuration>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <checkstyleRules>
+                        <module name="Checker">
+                            <property name="charset" value="UTF-8" />
+<!--                            <module name="NewlineAtEndOfFile" />-->
+                            <module name="FileLength">
+                                <property name="max" value="1500" />
+                            </module>
+                            <module name="SuppressWarningsFilter" />
+                            <module name="LineLength">
+                                <property name="fileExtensions" value="java"/>
+                                <property name="max" value="150"/>
+                                <property name="ignorePattern"
+                                          value="^implements.*|^extends.*|^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+                            </module>
+                            <module name="TreeWalker">
+                                <module name="SuppressWarningsHolder" />
+                                <module name="IllegalImport" />
+                                <module name="RedundantImport" />
+                                <module name="UnusedImports" />
+                                <module name="MissingOverride" />
+                                <module name="JavadocType">
+                                    <property name="allowUnknownTags" value="true" />
+                                    <message value="class comment: miss javadoc comment." key="javadoc.missing" />
+                                </module>
+                                <module name="JavadocMethod">
+                                    <property name="scope" value="public"/>
+                                    <property name="allowMissingParamTags" value="true"/>
+                                    <property name="allowMissingReturnTag" value="true"/>
+                                    <property name="allowedAnnotations"
+                                              value="Override, Test, Before, After, BeforeClass, AfterClass, Parameterized, Parameters, Bean"/>
+                                    <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF"/>
+                                </module>
+                                <module name="MissingJavadocMethod">
+                                    <property name="scope" value="public"/>
+                                    <property name="minLineCount" value="2"/>
+                                    <property name="allowedAnnotations"
+                                              value="Override, Test, Before, After, BeforeClass, AfterClass, Parameterized, Parameters, Bean"/>
+                                    <property name="ignoreMethodNamesRegex" value="^set[A-Z].*|^get[A-Z].*|main"/>
+                                    <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF"/>
+                                </module>
+                                <module name="TrailingComment" />
+                                <module name="LocalFinalVariableName" />
+                                <module name="LocalVariableName" />
+                                <module name="PackageName">
+                                    <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+                                    <message key="name.invalidPattern"
+                                             value="Package name ''{0}'' must match pattern ''{1}''."/>
+                                </module>
+                                <module name="StaticVariableName" />
+                                <module name="TypeName">
+                                    <property name="severity" value="warning" />
+                                    <message value="name ''{0}'' should be ''{1}'' template." key="name.invalidPattern" />
+                                </module>
+                                <module name="MemberName" />
+                                <module name="MethodName" />
+                                <module name="ParameterName " />
+                                <module name="ConstantName" />
+                                <module name="ArrayTypeStyle" />
+                                <module name="UpperEll" />
+<!--                                <module name="LineLength">-->
+<!--                                    <property name="max" value="120" />-->
+<!--                                </module>-->
+                                <module name="MethodLength">
+                                    <property name="tokens" value="METHOD_DEF" />
+                                    <property name="max" value="100" />
+                                </module>
+                                <module name="ParameterNumber">
+                                    <property name="max" value="8" />
+                                    <property name="ignoreOverriddenMethods" value="true" />
+                                    <property name="tokens" value="METHOD_DEF" />
+                                </module>
+                                <module name="MethodParamPad" />
+                                <module name="TypecastParenPad" />
+                                <module name="NoWhitespaceAfter" />
+                                <module name="NoWhitespaceBefore" />
+                                <module name="OperatorWrap" />
+                                <module name="ParenPad" />
+                                <module name="WhitespaceAfter" />
+                                <module name="WhitespaceAround" />
+                                <module name="ModifierOrder" />
+                                <module name="RedundantModifier" />
+                                <module name="AvoidNestedBlocks" />
+                                <module name="EmptyBlock" />
+                                <module name="LeftCurly" />
+                                <module name="NeedBraces" />
+                                <module name="RightCurly" />
+                                <module name="EmptyStatement" />
+                                <module name="EqualsHashCode" />
+                                <module name="HiddenField">
+                                    <property name="tokens" value="VARIABLE_DEF" />
+                                </module>
+                                <module name="IllegalInstantiation" />
+                                <module name="InnerAssignment" />
+                                <module name="MagicNumber">
+                                    <property name="ignoreNumbers" value="0, 1, 2, 3, 4, 8, 10, 16" />
+                                    <property name="ignoreAnnotation" value="true" />
+                                </module>
+                                <module name="MissingSwitchDefault" />
+                                <module name="SimplifyBooleanExpression" />
+                                <module name="SimplifyBooleanReturn" />
+                                <module name="FinalClass" />
+                                <module name="InterfaceIsType" />
+                                <module name="VisibilityModifier">
+                                    <property name="packageAllowed" value="true" />
+                                    <property name="protectedAllowed" value="true" />
+                                </module>
+                                <module name="StringLiteralEquality" />
+                                <module name="NestedForDepth">
+                                    <property name="max" value="2" />
+                                </module>
+                                <module name="NestedIfDepth">
+                                    <property name="max" value="3" />
+                                </module>
+                                <module name="UncommentedMain">
+                                    <property name="excludedClasses" value=".*Application | .*App" />
+                                </module>
+                                <module name="Regexp">
+                                    <property name="format" value="System\.out\.println" />
+                                    <property name="illegalPattern" value="true" />
+                                </module>
+                                <module name="ReturnCount">
+                                    <property name="max" value="10" />
+                                </module>
+                                <module name="NestedTryDepth ">
+                                    <property name="max" value="3" />
+                                </module>
+                                <module name="SuperClone" />
+                                <module name="SuperFinalize" />
+                            </module>
+                        </module>
+                    </checkstyleRules>
+                </configuration>
+            </plugin>
+            <!-- flatten -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+            </plugin>
+            <!-- githook -->
+            <plugin>
+                <groupId>io.github.phillipuniverse</groupId>
+                <artifactId>githook-maven-plugin</artifactId>
+                <version>1.0.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                        <configuration>
+                            <skipRepositoryCheck>true</skipRepositoryCheck>
+                            <hooks>
+                                <pre-push>set -e
+                                    echo --------------------[begin]---------------------
+
+
+                                    echo '\n\n\n------------------------------------------------'
+                                    echo 正在检查是否能通过编译...
+                                    echo '------------------------------------------------\n\n\n'
+
+                                    mvn clean compile
+
+
+                                    echo '\n\n\n------------------------------------------------'
+                                    echo 正在检查代码格式...
+                                    echo '------------------------------------------------\n\n\n'
+
+                                    mvn checkstyle:check
+
+
+                                    echo '\n\n\n------------------------------------------------'
+                                    echo 正在检查是否有明显bugs...
+                                    echo '------------------------------------------------\n\n\n'
+
+                                    mvn findbugs:check
+
+
+                                    echo '\n\n\n------------------------------------------------'
+                                    echo 正在检查是否能通过单元测试...
+                                    echo '------------------------------------------------\n\n\n'
+
+                                    mvn test -DskipTests=false
+
+
+                                    echo --------------------[ end ]---------------------
+                                </pre-push>
+                            </hooks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>aliyun-public</id>
+            <name>aliyun maven</name>
+            <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
+        </repository>
+    </repositories>
+
+</project>
