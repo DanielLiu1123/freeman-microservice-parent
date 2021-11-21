@@ -175,7 +175,7 @@
                             </module>
                             <module name="TreeWalker">
                                 <module name="LambdaBodyLength">
-                                    <property name="max" value="12"/>
+                                    <property name="max" value="32"/>
                                 </module>
                                 <module name="AvoidNoArgumentSuperConstructorCall"/>
                                 <module name="CovariantEquals"/>
