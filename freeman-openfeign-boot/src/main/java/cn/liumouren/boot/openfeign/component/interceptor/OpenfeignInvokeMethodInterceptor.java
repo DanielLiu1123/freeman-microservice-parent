@@ -13,7 +13,7 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class OpenfeignInvokeMethodInterceptor implements MethodInterceptor {
     @Override
-    public Object invoke(MethodInvocation invocation) throws FreemanOpenfeignCallException{
+    public Object invoke(MethodInvocation invocation) throws FreemanOpenfeignCallException {
         try {
             return invocation.proceed();
         } catch (Throwable e) {

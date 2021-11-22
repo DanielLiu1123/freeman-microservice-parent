@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class FreemanWebExceptionHandler {
 
+    /**
+     * web 类异常统一处理
+     *
+     * @param e {@link FreemanWebException}
+     * @return {@link Err}
+     */
     @ExceptionHandler(FreemanWebException.class)
     public Err freemanWebExceptionHandler(FreemanWebException e) {
         // e.getCause() == null 说明 e 就是 cause
