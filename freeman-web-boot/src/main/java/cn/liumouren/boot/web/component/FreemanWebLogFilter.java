@@ -4,9 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.liumouren.boot.common.WebConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.Ordered;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -27,20 +25,21 @@ public class FreemanWebLogFilter extends OncePerRequestFilter implements Ordered
     private static final Logger LOGGER = LoggerFactory.getLogger(FreemanWebLogFilter.class);
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
         local.set(System.currentTimeMillis());
 
         // 调用的 app
-        String fromApp = httpServletRequest.getHeader(WebConst.Header.FROM_APP);
+        String fromApp = request.getHeader(WebConst.Header.FROM_APP);
         if (StrUtil.isBlank(fromApp)) {
             fromApp = WebConst.DIRECTLY_CALL;
         }
 
         // 请求路径
-        String uri = httpServletRequest.getRequestURI();
+        String uri = request.getRequestURI();
 
         try {
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            chain.doFilter(request, response);
             // 正常请求
             LOGGER.info("app: {}, uri: {}, consuming: {}",
                     fromApp,

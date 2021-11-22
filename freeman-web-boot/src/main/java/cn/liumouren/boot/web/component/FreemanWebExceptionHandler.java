@@ -17,7 +17,7 @@ public class FreemanWebExceptionHandler {
     @ExceptionHandler(FreemanWebException.class)
     public Err freemanWebExceptionHandler(FreemanWebException e) {
         // e.getCause() == null 说明 e 就是 cause
-        String cause = e.getCause() == null ? e.toString(): e.getCause().toString();
+        String cause = e.getCause() == null ? e.toString() : e.getCause().toString();
         return Err.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), cause);
     }
 }

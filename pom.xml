@@ -218,7 +218,7 @@
                                     <property name="allowMissingReturnTag" value="true"/>
                                     <property name="allowedAnnotations"
                                               value="Override, Test, Before, After, BeforeClass, AfterClass,
-                                              Parameterized, Parameters, Bean, PostConstruct"/>
+                                              Parameterized, Parameters, Bean, PostConstruct, ExceptionHandler"/>
                                     <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF"/>
                                 </module>
                                 <module name="MissingJavadocMethod">
