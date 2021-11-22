@@ -5,6 +5,7 @@ package cn.liumouren.boot.common;
  * @author <a href="mailto:freemanliu.me@gmail.com">freeman</a>
  * @date 2021/11/21 18:19
  */
+@SuppressWarnings("InterfaceIsType")
 public interface WebConst {
 
     /**
