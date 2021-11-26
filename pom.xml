@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <modules>
-        <module>freeman-web-boot</module>
-        <module>freeman-common-boot</module>
-        <module>freeman-openfeign-boot</module>
+        <module>web</module>
+        <module>common</module>
+        <module>openfeign</module>
+        <module>integration-test</module>
     </modules>
 
     <parent>
@@ -95,6 +96,11 @@
                 <artifactId>freeman-web-boot</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-openfeign-boot</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -121,7 +127,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>@{argLine} -Xms512m -Xmx512m -Dfile.encoding=UTF-8</argLine>
+                    <argLine>@{argLine} -Xmx1g -Dfile.encoding=UTF-8</argLine>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
@@ -329,12 +335,14 @@
                 <configuration>
                     <effort>Max</effort>
                     <threshold>High</threshold>
-                    <maxHeap>512</maxHeap>
+                    <maxHeap>1024</maxHeap>
                     <outputEncoding>UTF-8</outputEncoding>
-                    <xmlOutput>true</xmlOutput>
+                    <xmlOutput>false</xmlOutput>
+                    <spotbugsXmlOutput>false</spotbugsXmlOutput>
+<!--                    <sarifOutput>false</sarifOutput>-->
                     <outputDirectory>${project.build.directory}/spotbugs-reports</outputDirectory>
-                    <xmlOutputDirectory>${project.build.directory}/spotbugs-reports</xmlOutputDirectory>
-                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs-reports</spotbugsXmlOutputDirectory>
+<!--                    <xmlOutputDirectory>${project.build.directory}/spotbugs-reports</xmlOutputDirectory>-->
+<!--                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs-reports</spotbugsXmlOutputDirectory>-->
                     <omitVisitors>FindReturnRef,DumbMethods,DefaultEncodingDetector,SwitchFallthrough</omitVisitors>
                 </configuration>
             </plugin>
@@ -420,12 +428,25 @@
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
         </repository>
     </repositories>
-    <distributionManagement>
-        <repository>
+    <pluginRepositories>
+        <pluginRepository>
             <id>aliyun-public</id>
             <name>aliyun maven</name>
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>aliyun-public</id>
+            <name>阿里云生产库</name>
+            <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
         </repository>
+        <snapshotRepository>
+            <id>aliyun-snapshot</id>
+            <name>阿里云快照库</name>
+            <url>https://packages.aliyun.com/maven/repository/2151940-snapshot-GcO0aN/</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>

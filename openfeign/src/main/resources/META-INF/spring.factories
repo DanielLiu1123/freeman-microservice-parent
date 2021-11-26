@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.liumouren.boot.openfeign.FreemanOpenfeignAutoConfiguration

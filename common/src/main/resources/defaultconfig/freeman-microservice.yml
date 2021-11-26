@@ -1,0 +1,19 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    accept-count: 100
+    accesslog:
+      encoding: UTF-8
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+feign:
+  okhttp:
+    enabled: true
