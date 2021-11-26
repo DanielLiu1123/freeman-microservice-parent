@@ -13,12 +13,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CountDownLatch;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  *
@@ -40,9 +41,8 @@ public class WebBootTest {
 
 
     @Test
-    public void testFilter() throws InterruptedException {
-        String appName = restTemplate.getForObject("http://localhost:8081", String.class);
-        assertEquals("web-boot-test", appName);
+    public void testFilter() {
+        restTemplate.getForObject("http://localhost:8081", String.class);
     }
 
     @Test
@@ -62,8 +62,8 @@ public class WebBootTest {
 
     @Test
     public void testBizExceptionHandler() {
-        String res = restTemplate.getForObject("http://localhost:8081/biz_exception", String.class);
-
+        assertThrows(HttpServerErrorException.InternalServerError.class,
+                () -> restTemplate.getForObject("http://localhost:8081/biz_exception", String.class));
     }
 
 
