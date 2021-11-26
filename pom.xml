@@ -48,6 +48,7 @@
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <fastjson.version>1.2.78</fastjson.version>
         <hutool.version>5.7.16</hutool.version>
+        <spotbugs.version>4.5.0</spotbugs.version>
     </properties>
 
     <dependencyManagement>
@@ -84,6 +85,19 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <!-- spotbugs -->
+            <dependency>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs</artifactId>
+                <version>${spotbugs.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-annotations</artifactId>
+                <version>${spotbugs.version}</version>
+                <optional>true</optional>
             </dependency>
             <!-- inner -->
             <dependency>
@@ -130,6 +144,11 @@
                     <argLine>@{argLine} -Xmx1g -Dfile.encoding=UTF-8</argLine>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
+            </plugin>
+            <!-- install -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
             </plugin>
             <!-- deploy -->
             <plugin>

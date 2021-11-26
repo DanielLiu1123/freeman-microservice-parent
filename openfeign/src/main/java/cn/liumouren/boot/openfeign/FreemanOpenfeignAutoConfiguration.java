@@ -2,10 +2,10 @@ package cn.liumouren.boot.openfeign;
 
 import cn.liumouren.boot.openfeign.component.CombinationContract;
 import cn.liumouren.boot.openfeign.component.FreemanErrorDecoder;
-import cn.liumouren.boot.openfeign.component.processor.UserIdParameterProcessor;
 import cn.liumouren.boot.openfeign.component.interceptor.FromAppRequestInterceptor;
 import cn.liumouren.boot.openfeign.component.interceptor.InvokeMethodInterceptor;
 import cn.liumouren.boot.openfeign.component.processor.PrimerBeanDefinitionPostProcessor;
+import cn.liumouren.boot.openfeign.component.processor.UserIdParameterProcessor;
 import feign.Contract;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
@@ -18,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientProperties;
-import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -29,7 +27,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

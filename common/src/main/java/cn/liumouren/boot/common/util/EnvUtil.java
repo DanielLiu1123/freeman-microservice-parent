@@ -1,6 +1,7 @@
 package cn.liumouren.boot.common.util;
 
 import cn.liumouren.boot.common.constant.enumeration.Env;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.core.env.Environment;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.core.env.Environment;
 public final class EnvUtil {
     private static Environment environment;
 
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public void setEnvironment(Environment environment) {
         EnvUtil.environment = environment;
     }

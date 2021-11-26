@@ -20,11 +20,9 @@ public class CommonDefaultConfigApp implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 检查默认配置是否生效
-        System.out.println(enableOkhttp);
         Assert.isTrue(enableOkhttp, "默认配置没有生效");
 
         // 检查默认配置优先级是否正确
-        System.out.println(allowOverriding);
         Assert.isTrue(!allowOverriding, "默认配置优先级不正确");
     }
 }
