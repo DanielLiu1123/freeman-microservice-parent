@@ -1,6 +1,8 @@
 package cn.liumouren.boot.openfeign.openfeigninvokeinterceptor;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.liumouren.boot.common.exception.BizException;
+import cn.liumouren.boot.openfeign.Admin;
 import cn.liumouren.boot.openfeign.component.UserId;
 import feign.*;
 import org.junit.jupiter.api.Test;
@@ -12,12 +14,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,8 +44,12 @@ public class InvokeInterceptorBootTest {
     @Qualifier("cn.liumouren.boot.openfeign.openfeigninvokeinterceptor.InvokeInterceptorBootTest$InvokeInterceptorApi")
     private InvokeInterceptorApi invokeInterceptorApi;
 
+    @Autowired
+    @Qualifier("cn.liumouren.boot.openfeign.openfeigninvokeinterceptor.InvokeInterceptorBootTest$RequestMappingApi")
+    private RequestMappingApi requestMappingApi;
+
     @Test
-    public void testOpenfeign_fromAppHeader() {
+    public void test_fromAppHeader() {
         assertThrows(BizException.class, () -> invokeInterceptorApi.throwExpectedException());
         assertThrows(FeignException.class, () -> invokeInterceptorApi.invokeErr());
         assertThrows(FeignException.class, () -> invokeInterceptorApi.throwUnexpectedException());
@@ -69,6 +73,21 @@ public class InvokeInterceptorBootTest {
         map.put("freeman-03", "0303");
         map.put("freeman-04", "0404");
         assertEquals("freeman:4 headers", invokeInterceptorApi.testRequestLine(map, "freeman", "001"));
+    }
+
+    @Test
+    public void test_requestMapping() {
+        assertEquals("freeman", requestMappingApi.testRequestMapping("freeman"));
+    }
+
+    @Test
+    public void test_requestBody() {
+        Admin admin = new Admin()
+                .setAge(21)
+                .setName("daniel")
+                .setDeleted(false)
+                .setRoles(Arrays.asList("admin", "user"));
+        assertEquals(4, requestMappingApi.testRequestBody(admin));
     }
 
 
@@ -101,6 +120,15 @@ public class InvokeInterceptorBootTest {
                 "freeman-01: 010101"
         })
         String testRequestLine(@RequestHeader Map<String, String> header, @PathVariable("name") String name, @UserId String id);
+    }
+
+    @FeignClient(value = "invoke-interceptor", path = "/requestMapping", url = "http://localhost:8282")
+    interface RequestMappingApi {
+        @RequestLine("GET /{name}")
+        String testRequestMapping(@PathVariable("name") String name);
+
+        @PostMapping
+        int testRequestBody(Admin admin);
     }
 
     @Configuration
@@ -156,6 +184,18 @@ public class InvokeInterceptorBootTest {
                         .filter(key -> key.startsWith("freeman"))
                         .count();
                 return String.format("%s:%d headers", name, size);
+            }
+
+            @GetMapping("/requestMapping/{name}")
+            String testRequestLine(@PathVariable String name) {
+                return name;
+            }
+
+            @PostMapping("/requestMapping")
+            int testRequestBody(@RequestBody Admin admin) {
+                System.out.println(admin);
+                Map<String, Object> map = BeanUtil.beanToMap(admin);
+                return map.size();
             }
 
         }

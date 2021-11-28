@@ -8,6 +8,8 @@
         <module>common</module>
         <module>openfeign</module>
         <module>integration-test</module>
+        <module>cache</module>
+        <module>redis</module>
     </modules>
 
     <parent>
@@ -42,6 +44,7 @@
         <flatten-maven.version>1.2.7</flatten-maven.version>
         <githook-maven.version>1.0.5</githook-maven.version>
         <spotbugs-maven.version>4.5.0.0</spotbugs-maven.version>
+        <spotbugs.version>4.5.0</spotbugs.version>
 
         <!-- dependencies -->
         <spring-cloud.version>2020.0.3</spring-cloud.version>
@@ -351,6 +354,13 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>${spotbugs-maven.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <effort>Max</effort>
                     <threshold>High</threshold>
@@ -363,6 +373,7 @@
 <!--                    <xmlOutputDirectory>${project.build.directory}/spotbugs-reports</xmlOutputDirectory>-->
 <!--                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs-reports</spotbugsXmlOutputDirectory>-->
                     <omitVisitors>FindReturnRef,DumbMethods,DefaultEncodingDetector,SwitchFallthrough</omitVisitors>
+<!--                    <excludeFilterFile>${}/src/spotbugs-exclude-bugs.xml</excludeFilterFile>-->
                 </configuration>
             </plugin>
             <!-- flatten -->

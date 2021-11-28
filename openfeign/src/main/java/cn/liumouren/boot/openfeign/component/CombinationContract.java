@@ -1,6 +1,8 @@
 package cn.liumouren.boot.openfeign.component;
 
 import feign.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.core.convert.ConversionService;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
  * @date 2021/11/26 10:58
  */
 public class CombinationContract extends SpringMvcContract {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CombinationContract.class);
 
     private final DeclarativeContract defaultContract;
 
@@ -43,13 +46,14 @@ public class CombinationContract extends SpringMvcContract {
     protected void processAnnotationOnClass(MethodMetadata data, Class<?> clz) {
         super.processAnnotationOnClass(data, clz);
 
+        // TODO 有办法消除反射操作吗?
         try {
             Method method = DeclarativeContract.class
                     .getDeclaredMethod("processAnnotationOnClass", MethodMetadata.class, Class.class);
             method.setAccessible(true);
             method.invoke(defaultContract, data, clz);
         } catch (Exception ignore) {
-
+            LOGGER.warn("Default Contract解析类[{}]上注解出现异常", clz);
         }
     }
 
@@ -64,7 +68,7 @@ public class CombinationContract extends SpringMvcContract {
                 med.setAccessible(true);
                 med.invoke(defaultContract, data, annotation, med);
             } catch (Exception ignore) {
-
+                LOGGER.warn("Default Contract解析方法[{}]上注解[{}]出现异常", method.toString(), annotation.annotationType());
             }
         } else {
             super.processAnnotationOnMethod(data, annotation, method);
@@ -90,11 +94,14 @@ public class CombinationContract extends SpringMvcContract {
                 med.setAccessible(true);
                 med.invoke(defaultContract, data, annotations, paramIndex);
             } catch (Exception ignore) {
-
+                LOGGER.warn("Default Contract解析第[{}]个参数上注解[{}]出现异常",
+                        paramIndex,
+                        Arrays.stream(annotations)
+                                .map(Annotation::annotationType)
+                                .collect(Collectors.toList()));
             }
         }
 
-        // 先处理非 feign 注解, 不然会出现 NPE
         if (noneFeignAnnos.length != 0) {
             return super.processAnnotationsOnParameter(data, noneFeignAnnos, paramIndex);
         }
