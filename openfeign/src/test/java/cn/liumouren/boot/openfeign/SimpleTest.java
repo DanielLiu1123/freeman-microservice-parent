@@ -13,5 +13,11 @@ public class SimpleTest {
     public void testClass() throws ClassNotFoundException {
         Class<?> aClass = Class.forName("cn.liumouren.boot.openfeign.primerbean.OpenfeignPrimerBeanBootTest$PrimerBean2Api");
         System.out.println(aClass);
+
+        System.out.println(Class.forName("cn.liumouren.boot.openfeign.SimpleTest$SomeInterface"));
+    }
+
+    interface SomeInterface {
+
     }
 }

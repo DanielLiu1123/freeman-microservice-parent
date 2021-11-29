@@ -1,6 +1,6 @@
 package cn.liumouren.boot.openfeign;
 
-import cn.liumouren.boot.openfeign.component.CombinationContract;
+import cn.liumouren.boot.openfeign.component.CompositeContract;
 import cn.liumouren.boot.openfeign.component.FreemanErrorDecoder;
 import cn.liumouren.boot.openfeign.component.interceptor.FromAppRequestInterceptor;
 import cn.liumouren.boot.openfeign.component.interceptor.InvokeMethodInterceptor;
@@ -72,7 +72,7 @@ public class FreemanOpenfeignAutoConfiguration {
     @Bean
     public Contract contract(ConversionService feignConversionService, List<AnnotatedParameterProcessor> parameterProcessors) {
         boolean decodeSlash = feignClientProperties == null || feignClientProperties.isDecodeSlash();
-        return new CombinationContract(parameterProcessors, feignConversionService, decodeSlash);
+        return new CompositeContract(parameterProcessors, feignConversionService, decodeSlash);
     }
 
     @Bean

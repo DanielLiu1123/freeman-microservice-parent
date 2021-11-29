@@ -131,6 +131,13 @@ public class InvokeInterceptorBootTest {
         int testRequestBody(Admin admin);
     }
 
+    @FeignClient(value = "some", url = "http://localhost:8282")
+    interface SomeApi {
+
+        @RequestLine("GET /some/{name}")
+        String some(@PathVariable("name") String name);
+    }
+
     @Configuration
     @EnableAutoConfiguration
     @EnableFeignClients

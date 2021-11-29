@@ -1,0 +1,6 @@
+logging:
+  level:
+    cn.liumouren: debug
+spring:
+  application:
+    name: test-openfeign-app

@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
  * @author <a href="mailto:freemanliu.me@gmail.com">freeman</a>
  * @date 2021/11/26 10:58
  */
-public class CombinationContract extends SpringMvcContract {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CombinationContract.class);
+public class CompositeContract extends SpringMvcContract {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompositeContract.class);
 
-    private final DeclarativeContract defaultContract;
+    private final Contract defaultContract;
 
     private static final List<Class<? extends Annotation>> FEIGN_ANNOTATIONS = Arrays.asList(
             Body.class,
@@ -35,9 +35,9 @@ public class CombinationContract extends SpringMvcContract {
             RequestLine.class
     );
 
-    public CombinationContract(List<AnnotatedParameterProcessor> parameterProcessors,
-                               ConversionService feignConversionService,
-                               boolean decodeSlash) {
+    public CompositeContract(List<AnnotatedParameterProcessor> parameterProcessors,
+                             ConversionService feignConversionService,
+                             boolean decodeSlash) {
         super(parameterProcessors, feignConversionService, decodeSlash);
         defaultContract = new Contract.Default();
     }
@@ -48,7 +48,7 @@ public class CombinationContract extends SpringMvcContract {
 
         // TODO 有办法消除反射操作吗?
         try {
-            Method method = DeclarativeContract.class
+            Method method = BaseContract.class
                     .getDeclaredMethod("processAnnotationOnClass", MethodMetadata.class, Class.class);
             method.setAccessible(true);
             method.invoke(defaultContract, data, clz);
@@ -63,7 +63,7 @@ public class CombinationContract extends SpringMvcContract {
             // 防止方法上没有 非feign注解 情况报 NPE
             data.indexToExpander(new LinkedHashMap<>());
             try {
-                Method med = DeclarativeContract.class
+                Method med = BaseContract.class
                         .getDeclaredMethod("processAnnotationOnMethod", MethodMetadata.class, Annotation.class, Method.class);
                 med.setAccessible(true);
                 med.invoke(defaultContract, data, annotation, med);
@@ -89,7 +89,7 @@ public class CombinationContract extends SpringMvcContract {
 
         if (!feignAnnos.isEmpty()) {
             try {
-                Method med = DeclarativeContract.class
+                Method med = BaseContract.class
                         .getDeclaredMethod("processAnnotationsOnParameter", MethodMetadata.class, Annotation[].class, int.class);
                 med.setAccessible(true);
                 med.invoke(defaultContract, data, annotations, paramIndex);
@@ -102,7 +102,7 @@ public class CombinationContract extends SpringMvcContract {
             }
         }
 
-        if (noneFeignAnnos.length != 0) {
+        if (noneFeignAnnos.length > 0) {
             return super.processAnnotationsOnParameter(data, noneFeignAnnos, paramIndex);
         }
 
