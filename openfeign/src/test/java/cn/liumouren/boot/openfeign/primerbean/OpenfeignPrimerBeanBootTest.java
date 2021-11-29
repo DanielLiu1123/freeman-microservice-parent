@@ -41,7 +41,7 @@ public class OpenfeignPrimerBeanBootTest {
     private PrimerBeanApi PrimerBeanController;
 
     @Test
-    public void testOpenfeign_fromAppHeader() {
+    public void test_primerBean() {
         // 判断我们是否给 controller primer 设置为 false
         assertTrue(PrimerBeanApi.class.isAssignableFrom(primerBeanApi.getClass()));
         assertEquals(WebBootConfiguration.PrimerBeanController.class, PrimerBeanController.getClass());

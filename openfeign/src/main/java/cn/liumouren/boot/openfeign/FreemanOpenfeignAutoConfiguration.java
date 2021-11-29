@@ -40,8 +40,6 @@ public class FreemanOpenfeignAutoConfiguration {
 
     @Autowired(required = false)
     private FeignClientProperties feignClientProperties;
-//    @Autowired
-//    private List<AnnotatedParameterProcessor> parameterProcessors;
 
     @Bean
     public RequestInterceptor fromAppRequestInterceptor(Environment environment) {
