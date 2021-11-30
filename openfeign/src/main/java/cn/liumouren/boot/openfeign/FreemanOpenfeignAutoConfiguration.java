@@ -1,7 +1,7 @@
 package cn.liumouren.boot.openfeign;
 
-import cn.liumouren.boot.openfeign.component.CompositeContract;
-import cn.liumouren.boot.openfeign.component.FreemanErrorDecoder;
+import cn.liumouren.boot.openfeign.component.feign.CompositeContract;
+import cn.liumouren.boot.openfeign.component.feign.FreemanErrorDecoder;
 import cn.liumouren.boot.openfeign.component.interceptor.FromAppRequestInterceptor;
 import cn.liumouren.boot.openfeign.component.interceptor.InvokeMethodInterceptor;
 import cn.liumouren.boot.openfeign.component.processor.PrimerBeanDefinitionPostProcessor;
@@ -38,8 +38,35 @@ import java.util.List;
 @EnableConfigurationProperties(FreemanOpenfeignProperties.class)
 public class FreemanOpenfeignAutoConfiguration {
 
-    @Autowired(required = false)
-    private FeignClientProperties feignClientProperties;
+    @Configuration(proxyBeanMethods = false)
+    static class AnnotatedParameterProcessorConfiguration {
+
+        @Bean
+        public AnnotatedParameterProcessor userIdAnnotatedParameterProcessor() {
+            return new UserIdParameterProcessor();
+        }
+
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    static class CustomizeFeignConfiguration {
+
+        @Autowired(required = false)
+        private FeignClientProperties feignClientProperties;
+
+        @Bean
+        public ErrorDecoder freemanErrorDecoder() {
+            return new FreemanErrorDecoder();
+        }
+
+        @Bean
+        public Contract freemanContract(ConversionService feignConversionService, List<AnnotatedParameterProcessor> processors) {
+            boolean decodeSlash = feignClientProperties == null || feignClientProperties.isDecodeSlash();
+            return new CompositeContract(processors, feignConversionService, decodeSlash);
+        }
+
+    }
+
 
     @Bean
     public RequestInterceptor fromAppRequestInterceptor(Environment environment) {
@@ -60,22 +87,6 @@ public class FreemanOpenfeignAutoConfiguration {
         Pointcut pointcut = new ComposablePointcut(this::isApiAndNotController);
 
         return new DefaultPointcutAdvisor(pointcut, advice);
-    }
-
-    @Bean
-    public ErrorDecoder freemanErrorDecoder() {
-        return new FreemanErrorDecoder();
-    }
-
-    @Bean
-    public Contract contract(ConversionService feignConversionService, List<AnnotatedParameterProcessor> parameterProcessors) {
-        boolean decodeSlash = feignClientProperties == null || feignClientProperties.isDecodeSlash();
-        return new CompositeContract(parameterProcessors, feignConversionService, decodeSlash);
-    }
-
-    @Bean
-    public AnnotatedParameterProcessor userIdAnnotatedParameterProcessor() {
-        return new UserIdParameterProcessor();
     }
 
     private boolean isApiAndNotController(Class<?> clazz) {

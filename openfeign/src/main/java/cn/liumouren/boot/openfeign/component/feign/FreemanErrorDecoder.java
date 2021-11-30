@@ -1,4 +1,4 @@
-package cn.liumouren.boot.openfeign.component;
+package cn.liumouren.boot.openfeign.component.feign;
 
 import cn.liumouren.boot.common.exception.BizException;
 import cn.liumouren.boot.common.model.Err;

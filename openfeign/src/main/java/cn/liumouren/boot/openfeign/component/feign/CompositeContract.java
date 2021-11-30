@@ -1,4 +1,4 @@
-package cn.liumouren.boot.openfeign.component;
+package cn.liumouren.boot.openfeign.component.feign;
 
 import feign.*;
 import org.slf4j.Logger;
