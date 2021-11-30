@@ -10,6 +10,7 @@
         <module>integration-test</module>
         <module>cache</module>
         <module>redis</module>
+        <module>bom</module>
     </modules>
 
     <parent>
@@ -51,7 +52,6 @@
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <fastjson.version>1.2.78</fastjson.version>
         <hutool.version>5.7.16</hutool.version>
-        <spotbugs.version>4.5.0</spotbugs.version>
 
         <!-- 开关 -->
         <spotbugs.skip>false</spotbugs.skip>
@@ -371,12 +371,8 @@
                     <outputEncoding>UTF-8</outputEncoding>
                     <xmlOutput>false</xmlOutput>
                     <spotbugsXmlOutput>false</spotbugsXmlOutput>
-<!--                    <sarifOutput>false</sarifOutput>-->
                     <outputDirectory>${project.build.directory}/spotbugs-reports</outputDirectory>
-<!--                    <xmlOutputDirectory>${project.build.directory}/spotbugs-reports</xmlOutputDirectory>-->
-<!--                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs-reports</spotbugsXmlOutputDirectory>-->
                     <omitVisitors>FindReturnRef,DumbMethods,DefaultEncodingDetector,SwitchFallthrough</omitVisitors>
-<!--                    <excludeFilterFile>${}/src/spotbugs-exclude-bugs.xml</excludeFilterFile>-->
                 </configuration>
             </plugin>
             <!-- flatten -->
