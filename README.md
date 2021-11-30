@@ -27,3 +27,4 @@ spring-boot 集成所用的工具包
 
 NOTE:  
 check 一下能否把插件也打包到 aliyun ???
+应该专门抽一个模块出来做依赖管理

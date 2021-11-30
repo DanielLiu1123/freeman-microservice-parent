@@ -38,6 +38,11 @@ import java.util.List;
 @EnableConfigurationProperties(FreemanOpenfeignProperties.class)
 public class FreemanOpenfeignAutoConfiguration {
 
+    /**
+     * spring cloud openfeign 自定义注解解析
+     *
+     * @see AnnotatedParameterProcessor
+     */
     @Configuration(proxyBeanMethods = false)
     static class AnnotatedParameterProcessorConfiguration {
 
@@ -48,6 +53,14 @@ public class FreemanOpenfeignAutoConfiguration {
 
     }
 
+    /**
+     * feign 默认配置
+     *
+     * @see ErrorDecoder
+     * @see Contract
+     * @see feign.codec.Encoder
+     * @see feign.codec.Decoder
+     */
     @Configuration(proxyBeanMethods = false)
     static class CustomizeFeignConfiguration {
 
