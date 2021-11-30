@@ -52,6 +52,9 @@
         <fastjson.version>1.2.78</fastjson.version>
         <hutool.version>5.7.16</hutool.version>
         <spotbugs.version>4.5.0</spotbugs.version>
+
+        <!-- 开关 -->
+        <spotbugs.skip>false</spotbugs.skip>
     </properties>
 
     <dependencyManagement>
