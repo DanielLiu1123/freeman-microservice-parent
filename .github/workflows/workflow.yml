@@ -24,6 +24,8 @@ jobs:
   checktyle:
     name: Check Checkstyle
     runs-on: ubuntu-latest
+    needs:
+      - compile
     steps:
       - uses: actions/checkout@v2
       - name: checkstyle:check
@@ -31,6 +33,8 @@ jobs:
   test:
     name: Check Test
     runs-on: ubuntu-latest
+    needs:
+      - compile
     steps:
       - uses: actions/checkout@v2
       - name: mvn test
