@@ -8,8 +8,8 @@ on:
     branches:
       - master
 jobs:
-  check-compile:
-    name: Check whether it can be compiled
+  compile:
+    name: Check Compile
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,3 +21,17 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn compile
+  checktyle:
+    name: Check Checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: checkstyle:check
+        run: mvn checkstyle:check
+  test:
+    name: Check Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: mvn test
+        run: mvn -DskipTests=false test
