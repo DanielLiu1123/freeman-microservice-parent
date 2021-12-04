@@ -11,5 +11,11 @@
 
     <artifactId>freeman-openfeign-boot-starter</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.liumouren</groupId>
+            <artifactId>freeman-openfeign-boot</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
