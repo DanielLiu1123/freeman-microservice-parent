@@ -3,7 +3,7 @@ package cn.liumouren.boot.openfeign.openfeigninvokeinterceptor;
 import cn.hutool.core.bean.BeanUtil;
 import cn.liumouren.boot.common.exception.BizException;
 import cn.liumouren.boot.openfeign.Admin;
-import cn.liumouren.boot.openfeign.component.UserId;
+import cn.liumouren.boot.common.anno.UserId;
 import feign.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

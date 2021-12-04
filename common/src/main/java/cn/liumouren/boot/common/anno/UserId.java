@@ -1,4 +1,4 @@
-package cn.liumouren.boot.openfeign.component;
+package cn.liumouren.boot.common.anno;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UserId {
+
+    boolean required() default true;
 
     String HEADER = "X-Uid-Token";
 }

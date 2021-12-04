@@ -10,7 +10,6 @@
         <module>integration-test</module>
         <module>cache</module>
         <module>redis</module>
-        <module>bom</module>
     </modules>
 
     <parent>

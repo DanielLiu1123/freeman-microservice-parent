@@ -1,6 +1,6 @@
 package cn.liumouren.boot.openfeign.component.processor;
 
-import cn.liumouren.boot.openfeign.component.UserId;
+import cn.liumouren.boot.common.anno.UserId;
 import feign.MethodMetadata;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
 
