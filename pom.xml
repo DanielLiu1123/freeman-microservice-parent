@@ -54,7 +54,8 @@
         <hutool.version>5.7.16</hutool.version>
 
         <!-- 开关 -->
-        <spotbugs.skip>false</spotbugs.skip>
+        <spotbugs.skip>true</spotbugs.skip>
+        <githook.plugin.skip>false</githook.plugin.skip>
     </properties>
 
     <dependencyManagement>
@@ -428,6 +429,7 @@
                         </goals>
                         <configuration>
                             <skipRepositoryCheck>true</skipRepositoryCheck>
+                            <skip></skip>
                             <hooks>
                                 <pre-push>
                                     #!/bin/bash
