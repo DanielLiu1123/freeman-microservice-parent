@@ -13,8 +13,10 @@ server:
 spring:
   main:
     allow-bean-definition-overriding: true
-
-
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
 
 feign:
   okhttp:
