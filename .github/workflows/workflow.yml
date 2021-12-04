@@ -18,24 +18,20 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
-          cache: maven
+      # maven 缓存
+      - name: Dependies Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      # 编译
       - name: Build with Maven
         run: mvn compile
-  checktyle:
-    name: Check Checkstyle
-    runs-on: ubuntu-latest
-    needs:
-      - compile
-    steps:
-      - uses: actions/checkout@v2
-      - name: checkstyle:check
+      # checkstyle
+      - name: CheckStyle
         run: mvn checkstyle:check
-  test:
-    name: Check Test
-    runs-on: ubuntu-latest
-    needs:
-      - compile
-    steps:
-      - uses: actions/checkout@v2
-      - name: mvn test
+      # test
+      - name: Test
         run: mvn -DskipTests=false test
