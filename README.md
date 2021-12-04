@@ -10,8 +10,9 @@ spring-boot 集成所用的工具包
 针对 openFeign 做的集成
 - [x] 远程调用请求头来源添加
 - [x] FeignClient 和 Controller 的 Primer 设置
+- [x] 给所有 FeignClient 一个默认的配置
+  - 自定义 Contract 和 ErrorDecoder
 - [ ] 针对 FeignClient 调用的定制处理
-- [ ] 我们是否需要给所有 FeignClient 一个默认的配置 ??
 - [ ] Loadbalancer 相关问题
     - [ ] cache 选择
     - [ ] 负载均衡策略选择
@@ -20,8 +21,8 @@ spring-boot 集成所用的工具包
 针对 web 做的集成
 - [x] 可选的日志打印
 - [x] 可选的异常处理
+- [x] 自定义注解解析
 - [ ] 可选的安全校验
-- [ ] 自定义注解解析
 
 4. cache
 
