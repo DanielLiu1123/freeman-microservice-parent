@@ -335,10 +335,10 @@
                                 <module name="NestedIfDepth">
                                     <property name="max" value="3" />
                                 </module>
-                                <module name="Regexp">
-                                    <property name="format" value="System\.out\.print" />
-                                    <property name="illegalPattern" value="true" />
-                                </module>
+<!--                                <module name="Regexp">-->
+<!--                                    <property name="format" value="System\.out\.print" />-->
+<!--                                    <property name="illegalPattern" value="true" />-->
+<!--                                </module>-->
                                 <module name="ReturnCount">
                                     <property name="max" value="10" />
                                 </module>
@@ -452,14 +452,14 @@
 
     <repositories>
         <repository>
-            <id>aliyun-public</id>
+            <id>aliyun-releases</id>
             <name>aliyun maven</name>
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>aliyun-public</id>
+            <id>aliyun-releases</id>
             <name>aliyun maven</name>
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
         </pluginRepository>
@@ -467,7 +467,7 @@
 
     <distributionManagement>
         <repository>
-            <id>aliyun-public</id>
+            <id>aliyun-releases</id>
             <name>阿里云生产库</name>
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
         </repository>

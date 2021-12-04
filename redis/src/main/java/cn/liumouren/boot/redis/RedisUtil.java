@@ -12,7 +12,8 @@ import java.util.Map;
  * redis 工具类, 我们项目里不应该直接依赖 {@link RedisTemplate}
  *
  * @author <a href="mailto:freemanliu.me@gmail.com">freeman</a>
- * @date 2021/11/27 14:52
+ * @date 2021/12/4 12:27 PM
+ * @param <T> 操作类型
  */
 @Getter
 @Setter

@@ -15,8 +15,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
 /**
  * @author freeman
  * @date 2021/11/29 14:12
@@ -69,9 +67,9 @@ class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                '}';
+        return "User{"
+                + "name='" + name + '\''
+                + '}';
     }
 }
 
@@ -84,6 +82,7 @@ class TestFactoryBean implements FactoryBean<User> {
     }
 
     @Override
+    @SuppressWarnings("MagicNumber")
     public User getObject() throws Exception {
         Thread.sleep(1000L);
         User user = new User();
