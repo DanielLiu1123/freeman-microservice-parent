@@ -14,6 +14,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UserId {
 
+    /**
+     * 是否必须, 默认 true
+     * @return boolean
+     */
     boolean required() default true;
 
     String HEADER = "X-Uid-Token";
