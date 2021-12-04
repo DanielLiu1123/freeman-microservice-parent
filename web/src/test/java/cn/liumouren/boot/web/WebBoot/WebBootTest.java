@@ -1,4 +1,4 @@
-package cn.liumouren.boot.web;
+package cn.liumouren.boot.web.WebBoot;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.liumouren.boot.common.exception.BizException;

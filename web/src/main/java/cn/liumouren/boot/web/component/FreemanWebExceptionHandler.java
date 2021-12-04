@@ -23,10 +23,11 @@ public class FreemanWebExceptionHandler {
      * @return {@link Err}
      */
     @ExceptionHandler(WebException.class)
-    public Err freemanWebExceptionHandler(WebException e) {
+    public ResponseEntity freemanWebExceptionHandler(WebException e) {
         // e.getCause() == null 说明 e 就是 cause
         String cause = e.getCause() == null ? e.toString() : e.getCause().toString();
-        return Err.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), cause);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body(cause);
     }
 
     /**
@@ -41,6 +42,18 @@ public class FreemanWebExceptionHandler {
     @ExceptionHandler(BizException.class)
     public ResponseEntity<Err> freemanBizExceptionHandler(BizException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Err.of(e));
+    }
+
+    /**
+     * 最大只抓到 RuntimeException
+     *
+     * @param e e
+     * @return {@link ResponseEntity}
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity runtimeException(RuntimeException e) {
+        String cause = e.getCause() == null ? e.toString() : e.getCause().toString();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(cause);
     }
 
 }

@@ -10,6 +10,7 @@
         <module>integration-test</module>
         <module>cache</module>
         <module>redis</module>
+        <module>starter</module>
     </modules>
 
     <parent>
@@ -118,6 +119,21 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-openfeign-boot</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-web-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-openfeign-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-microservice-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
