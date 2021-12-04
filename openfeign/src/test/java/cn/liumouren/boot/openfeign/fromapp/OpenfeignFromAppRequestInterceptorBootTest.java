@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         classes = OpenfeignFromAppRequestInterceptorBootTest.WebBootConfiguration.class,
         properties = {
-                "server.port=81",
+                "server.port=10000",
                 "spring.application.name=openfeign-boot-test"
         }
 )
@@ -44,12 +44,12 @@ public class OpenfeignFromAppRequestInterceptorBootTest {
         String header = fromAppApi.testFromAppHeader();
         assertEquals("openfeign-boot-test", header);
 
-        String nullHeader = restTemplate.getForObject("http://localhost:81/testPrimerBean", String.class);
+        String nullHeader = restTemplate.getForObject("http://localhost:10000/testPrimerBean", String.class);
         assertNull(nullHeader);
     }
 
 
-    @FeignClient(value = "from-app", url = "http://localhost:81")
+    @FeignClient(value = "from-app", url = "http://localhost:10000")
     interface FromAppApi {
         @GetMapping("/testPrimerBean")
         String testFromAppHeader();

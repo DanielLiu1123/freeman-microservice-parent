@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         classes = OpenfeignPrimerBeanBootTest.WebBootConfiguration.class,
         properties = {
-                "server.port=82",
+                "server.port=10001",
                 "spring.application.name=openfeign-boot-test",
                 // FeignClient value 相同会出现重名 bean, 开启不会影响 feignClient 的使用
                 "spring.main.allow-bean-definition-overriding=true"
@@ -52,19 +52,19 @@ public class OpenfeignPrimerBeanBootTest {
     }
 
 
-    @FeignClient(value = "primer-bean", url = "http://localhost:82")
+    @FeignClient(value = "primer-bean", url = "http://localhost:10001")
     interface PrimerBeanApi {
         @GetMapping("/testPrimerBean")
         String testPrimerBean();
     }
 
-    @FeignClient(value = "primer-bean", url = "http://localhost:82")
+    @FeignClient(value = "primer-bean", url = "http://localhost:10001")
     interface PrimerBean2Api {
         @GetMapping("/testPrimerBean2")
         String testPrimerBean();
     }
 
-    @FeignClient(value = "three", url = "http://localhost:82")
+    @FeignClient(value = "three", url = "http://localhost:10001")
     interface ThreeApi {
     }
 
