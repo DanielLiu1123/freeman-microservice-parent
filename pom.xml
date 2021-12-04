@@ -429,7 +429,6 @@
                         </goals>
                         <configuration>
                             <skipRepositoryCheck>true</skipRepositoryCheck>
-                            <skip></skip>
                             <hooks>
                                 <pre-push>
                                     #!/bin/bash
