@@ -14,6 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 实现 {@link EnvironmentPostProcessor} 加载默认配置文件
@@ -24,6 +25,11 @@ import java.util.Properties;
 public class DefaultConfigEnvPostProcessor implements EnvironmentPostProcessor, ApplicationListener<ApplicationEnvironmentPreparedEvent>, Ordered {
 
     private static final DeferredLog LOGGER = new DeferredLog();
+
+    /**
+     * 是否已经打印日志, 在 bootstrap 容器中会出现打印多次情况
+     */
+    private static final AtomicBoolean IS_PRINTED = new AtomicBoolean(false);
 
     /**
      * 默认加载的配置
@@ -59,8 +65,10 @@ public class DefaultConfigEnvPostProcessor implements EnvironmentPostProcessor, 
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
         // 当触发 ApplicationEnvironmentPreparedEvent 事件时
-        // postProcessEnvironment(..) 已经执行, 我们打印日志
-        LOGGER.replayTo(DefaultConfigEnvPostProcessor.class);
+        // postProcessEnvironment(..) 已经执行, 我们打印日志, 且不论多少个容器启动, 我们只打印一次
+        if (IS_PRINTED.compareAndSet(false, true)) {
+            LOGGER.replayTo(DefaultConfigEnvPostProcessor.class);
+        }
     }
 
     @Override

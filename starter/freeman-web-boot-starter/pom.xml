@@ -16,6 +16,10 @@
             <groupId>cn.liumouren</groupId>
             <artifactId>freeman-web-boot</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

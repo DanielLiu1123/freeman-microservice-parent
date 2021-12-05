@@ -111,32 +111,32 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-common-boot</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-openfeign-boot</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-openfeign-boot-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-microservice-boot-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
