@@ -34,13 +34,13 @@ public class DefaultConfigEnvPostProcessor implements EnvironmentPostProcessor, 
     /**
      * 默认加载的配置
      */
-    private final String[] locations = {
+    private static final String[] LOCATIONS = {
             "defaultconfig/freeman-microservice.yml"
     };
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        for (String location : locations) {
+        for (String location : LOCATIONS) {
             ClassPathResource resource = new ClassPathResource(location);
             // 默认配置, 最低优先级
             environment.getPropertySources().addLast(loadProperties(resource));
