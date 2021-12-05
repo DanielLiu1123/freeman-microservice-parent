@@ -1,5 +1,7 @@
 org.springframework.boot.env.EnvironmentPostProcessor=\
   cn.liumouren.boot.common.processor.DefaultConfigEnvPostProcessor
+org.springframework.context.ApplicationListener=\
+  cn.liumouren.boot.common.processor.DefaultConfigEnvPostProcessor
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.liumouren.boot.common.FreemanCommonAutoConfiguration
 
