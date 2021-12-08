@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class BizException extends RuntimeException {
+public class BizException extends Exception {
 
     /**
      * 默认 null, 表示未知业务异常状态码

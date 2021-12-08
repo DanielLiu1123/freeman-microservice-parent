@@ -3,6 +3,8 @@ package cn.liumouren.boot.web.component;
 import cn.liumouren.boot.common.exception.BizException;
 import cn.liumouren.boot.common.exception.WebException;
 import cn.liumouren.boot.common.model.Err;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class FreemanWebExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FreemanWebExceptionHandler.class);
 
     /**
      * web 类异常统一处理
@@ -50,9 +54,10 @@ public class FreemanWebExceptionHandler {
      * @param e e
      * @return {@link ResponseEntity}
      */
-    @ExceptionHandler(RuntimeException.class)
+//    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity runtimeException(RuntimeException e) {
         String cause = e.getCause() == null ? e.toString() : e.getCause().toString();
+        LOGGER.warn("{}", e.toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(cause);
     }
 

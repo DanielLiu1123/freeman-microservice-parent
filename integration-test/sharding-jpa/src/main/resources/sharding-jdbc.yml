@@ -1,0 +1,73 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  shardingsphere:
+    datasource:
+      names: ds-user,ds-order
+      ds-order:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/freeman_order?serverTimezone=Asia/Shanghai&characterEncoding=utf8
+        type: com.zaxxer.hikari.HikariDataSource
+        username: root
+        password: llw1123..
+      ds-user:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/freeman_user?serverTimezone=Asia/Shanghai&characterEncoding=utf8
+        type: com.zaxxer.hikari.HikariDataSource
+        username: root
+        password: llw1123..
+    props:
+      sql-show: true
+    rules:
+      sharding:
+        key-generators:
+          snowflake:
+            props:
+              worker-id: 123
+            type: SNOWFLAKE
+        sharding-algorithms:
+          algorithm-order-db:
+            props:
+              algorithm-expression: ds-order
+            type: INLINE
+          algorithm-order-tb:
+            props:
+              algorithm-expression: tb_order_0
+            type: INLINE
+          algorithm-user-db:
+            props:
+              algorithm-expression: ds-user
+            type: INLINE
+          algorithm-user-tb:
+            props:
+              algorithm-expression: user_$->{id % 2}
+            type: INLINE
+        tables:
+          tb_order:
+            logic-table: tb_order
+            actual-data-nodes: ds-order.tb_order_0
+            database-strategy:
+              standard:
+                sharding-algorithm-name: algorithm-order-db
+                sharding-column: id
+            table-strategy:
+              standard:
+                sharding-algorithm-name: algorithm-order-tb
+                sharding-column: id
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+          user:
+            logic-table: user
+            actual-data-nodes: ds-user.user_$->{0..1}
+            database-strategy:
+              standard:
+                sharding-algorithm-name: algorithm-user-db
+                sharding-column: id
+            table-strategy:
+              standard:
+                sharding-algorithm-name: algorithm-user-tb
+                sharding-column: id
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake

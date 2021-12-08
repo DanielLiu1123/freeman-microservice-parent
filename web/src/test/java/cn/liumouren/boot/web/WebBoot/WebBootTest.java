@@ -95,7 +95,7 @@ public class WebBootTest {
             }
 
             @GetMapping("/biz_exception")
-            public String bizException() {
+            public String bizException() throws BizException {
                 throw new BizException()
                         .setCode(23212);
             }

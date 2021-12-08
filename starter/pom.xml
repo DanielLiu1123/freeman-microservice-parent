@@ -13,6 +13,7 @@
         <module>freeman-web-boot-starter</module>
         <module>freeman-openfeign-boot-starter</module>
         <module>freeman-microservice-boot-starter</module>
+        <module>freeman-db-mongo-boot-starter</module>
     </modules>
 
     <artifactId>starter</artifactId>

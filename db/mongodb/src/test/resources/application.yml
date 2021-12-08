@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/freeman_order
+      dynamic:
+        enable: true
+        datasources:
+          ds1:
+            uri: mongodb://localhost:27017/freeman_user
+            include:
+            exclude:
+          ds2:
+            uri: mongodb://localhost:27017/freeman_product
+            include:
+            exclude:
+  main:
+    allow-bean-definition-overriding: true

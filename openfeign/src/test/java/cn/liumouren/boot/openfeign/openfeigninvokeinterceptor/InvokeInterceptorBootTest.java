@@ -157,7 +157,7 @@ public class InvokeInterceptorBootTest {
         static class InvokeInterceptorController {
 
             @GetMapping
-            public String throwExpectedException() {
+            public String throwExpectedException() throws BizException {
                 throw new BizException(2213, "msg", "illegal argument !", "test-app");
             }
 

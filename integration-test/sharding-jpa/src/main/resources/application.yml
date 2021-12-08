@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    name: sharing-jpa
+  jpa:
+    show-sql: true
+
+  config:
+    import:
+      - sharding-jdbc.yml
+logging:
+  level:
+    org.apache.shardingsphere: debug
+    org.hibernate: debug

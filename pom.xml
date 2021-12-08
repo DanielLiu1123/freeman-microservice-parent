@@ -11,6 +11,7 @@
         <module>cache</module>
         <module>redis</module>
         <module>starter</module>
+        <module>db</module>
     </modules>
 
     <parent>
@@ -53,6 +54,8 @@
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <fastjson.version>1.2.78</fastjson.version>
         <hutool.version>5.7.16</hutool.version>
+        <druid-starter.version>1.2.8</druid-starter.version>
+        <shardingsphere.version>5.0.0</shardingsphere.version>
 
         <!-- 开关 -->
         <spotbugs.skip>true</spotbugs.skip>
@@ -107,6 +110,30 @@
                 <version>${spotbugs.version}</version>
                 <optional>true</optional>
             </dependency>
+            <!-- druid -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-starter.version}</version>
+            </dependency>
+            <!-- shardingsphere -->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+                <version>${shardingsphere.version}</version>
+            </dependency>
+            <!-- 使用 XA 事务时，需要引入此模块 -->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-transaction-xa-core</artifactId>
+                <version>${shardingsphere.version}</version>
+            </dependency>
+            <!-- 使用 BASE 事务时，需要引入此模块 -->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-transaction-base-seata-at</artifactId>
+                <version>${shardingsphere.version}</version>
+            </dependency>
             <!-- inner -->
             <dependency>
                 <groupId>cn.liumouren</groupId>
@@ -125,6 +152,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-db-mongodb-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -136,6 +168,11 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-microservice-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-db-mongo-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

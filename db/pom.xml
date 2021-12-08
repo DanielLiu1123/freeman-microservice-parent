@@ -8,15 +8,19 @@
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>integration-test</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>common-default-config</module>
-        <module>openfeign</module>
-        <module>microservice</module>
-        <module>sharding-jpa</module>
+        <module>mysql</module>
+        <module>mongodb</module>
     </modules>
+
+    <artifactId>db</artifactId>
+    <description>存储层数据库的扩展</description>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
 
 </project>

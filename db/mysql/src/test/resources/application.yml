@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: db-mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/freeman_user?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: llw1123..
+    name: master
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    dynamic:
+      enable: true
+      default-type: com.zaxxer.hikari.HikariDataSource
+      datasources:
+        - type: com.zaxxer.hikari.HikariDataSource
+          name: ds-user
+          url: jdbc:mysql://localhost:3306/freeman_user?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: llw1123..
+          extra:
+            maxPoolSize: 2
+
+        - type: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceWrapper
+          name: ds-order
+          url: jdbc:mysql://localhost:3306/freeman_order?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: llw1123..
+          extra:
+            initialSize: 2
+
+#    hikari:
+#      maximum-pool-size:
+#      connection-timeout:
+#      idle-timeout:
+#      max-lifetime:
+#      read-only:
+#      pool-name:
+#      transaction-isolation:
+#      auto-commit:
+#      minimum-idle:
+
+
+logging:
+  level:
+    org:
+      hibernate: trace
