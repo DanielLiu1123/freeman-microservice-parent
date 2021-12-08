@@ -2,7 +2,6 @@ package cn.liumouren.integrationtest.shardingjpa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
 
 /**
  *

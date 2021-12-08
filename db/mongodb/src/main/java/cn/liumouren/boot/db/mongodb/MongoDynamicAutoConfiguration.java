@@ -40,7 +40,7 @@ import static cn.liumouren.boot.db.mongodb.MongoDynamicProperties.PREFIX;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = PREFIX, name = "enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties({MongoDynamicProperties.class})
-@AutoConfigureAfter(MongoDataAutoConfiguration.class) // 我们在 mongoTemplate 装载完之后直接覆盖, 只需要
+@AutoConfigureAfter(MongoDataAutoConfiguration.class) // 我们在 mongoTemplate 装载完之后直接覆盖
 @AutoConfigureBefore(MongoRepositoriesAutoConfiguration.class) // 在 jpa 之前
 public class MongoDynamicAutoConfiguration {
 

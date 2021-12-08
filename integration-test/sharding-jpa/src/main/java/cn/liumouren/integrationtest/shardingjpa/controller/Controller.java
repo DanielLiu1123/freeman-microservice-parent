@@ -43,6 +43,11 @@ public class Controller {
 
     // 测试本地多数据源事务
 
+    /**
+     *
+     * @param ok
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("/user/testLocalTransaction/{ok}")
     public User testLocalTransaction(@PathVariable Integer ok) {

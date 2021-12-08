@@ -267,7 +267,9 @@
                         <!-- see https://checkstyle.sourceforge.io/ -->
                         <module name="Checker">
                             <property name="charset" value="UTF-8" />
-                            <module name="NewlineAtEndOfFile" />
+                            <module name="NewlineAtEndOfFile">
+                                <property name="fileExtensions" value="java"/>
+                            </module>
                             <module name="FileLength">
                                 <property name="max" value="1500" />
                             </module>

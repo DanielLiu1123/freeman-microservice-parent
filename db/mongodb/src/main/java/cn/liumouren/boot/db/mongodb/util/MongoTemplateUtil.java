@@ -12,6 +12,12 @@ import java.lang.reflect.Constructor;
  * @date 2021/12/8 19:31
  */
 public final class MongoTemplateUtil {
+    /**
+     *
+     * @param factory
+     * @param mongoTemplate
+     * @return
+     */
     public static MongoTemplate copy(MongoDatabaseFactory factory, MongoTemplate mongoTemplate) {
         try {
             Constructor<MongoTemplate> constructor = MongoTemplate.class.getDeclaredConstructor(MongoDatabaseFactory.class, MongoTemplate.class);
