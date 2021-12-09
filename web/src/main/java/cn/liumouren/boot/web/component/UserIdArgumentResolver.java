@@ -18,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     /**
-     * 解析的 header, 按先后顺序
+     * 解析 userId 的 headers, 按先后顺序
      */
     private static final String[] HEADERS = {
             UserId.HEADER

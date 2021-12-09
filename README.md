@@ -28,7 +28,7 @@ spring-boot 集成所用的工具包
 
 5. db
 - [x] mysql 动态数据源 (使用sharding-jdbc)
-- [ ] mongo 动态数据源 (基本完成)
+- [x] mongo 动态数据源
 
 NOTE:  
 check 一下能否把插件也打包到 aliyun ???
