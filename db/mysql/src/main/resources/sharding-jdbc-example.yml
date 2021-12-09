@@ -5,6 +5,7 @@ spring:
     datasource:
       names: ds-user,ds-order
       ds-order:
+        # sharding-jdbc 使用 key 的 set 方法设值, key 注意与对应数据源配置对应
         driver-class-name: com.mysql.cj.jdbc.Driver
         jdbc-url: jdbc:mysql://127.0.0.1:3306/freeman_order?serverTimezone=Asia/Shanghai&characterEncoding=utf8
         type: com.zaxxer.hikari.HikariDataSource

@@ -30,8 +30,8 @@ jobs:
       - name: Build with Maven
         run: mvn compile
       # checkstyle
-      - name: CheckStyle
-        run: mvn checkstyle:check
+#      - name: CheckStyle
+#        run: mvn checkstyle:check
       # test
       - name: Test
         run: mvn -DskipTests=false test

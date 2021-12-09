@@ -157,6 +157,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-db-mysql-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -173,6 +178,11 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-db-mongo-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-db-mysql-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>
@@ -305,7 +315,8 @@
                                     <property name="allowMissingReturnTag" value="true"/>
                                     <property name="allowedAnnotations"
                                               value="Override, Test, Before, After, BeforeClass, AfterClass,
-                                              Parameterized, Parameters, Bean, PostConstruct, ExceptionHandler"/>
+                                              Parameterized, Parameters, Bean, PostConstruct, ExceptionHandler,
+                                              PreDestroy"/>
                                     <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF"/>
                                 </module>
                                 <module name="MissingJavadocMethod">
@@ -391,10 +402,10 @@
                                 <module name="NestedIfDepth">
                                     <property name="max" value="3" />
                                 </module>
-<!--                                <module name="Regexp">-->
-<!--                                    <property name="format" value="System\.out\.print" />-->
-<!--                                    <property name="illegalPattern" value="true" />-->
-<!--                                </module>-->
+                                <module name="Regexp">
+                                    <property name="format" value="System\.(out|err)\.print" />
+                                    <property name="illegalPattern" value="true" />
+                                </module>
                                 <module name="ReturnCount">
                                     <property name="max" value="10" />
                                 </module>
