@@ -16,7 +16,11 @@
         <module>openfeign</module>
         <module>microservice</module>
         <module>sharding-jpa</module>
+        <module>k8s</module>
     </modules>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
 </project>
