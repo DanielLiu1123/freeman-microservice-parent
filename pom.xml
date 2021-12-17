@@ -273,150 +273,7 @@
                 </dependencies>
                 <configuration>
                     <logViolationsToConsole>true</logViolationsToConsole>
-                    <checkstyleRules>
-                        <!-- see https://checkstyle.sourceforge.io/ -->
-                        <module name="Checker">
-                            <property name="charset" value="UTF-8" />
-                            <module name="NewlineAtEndOfFile">
-                                <property name="fileExtensions" value="java"/>
-                            </module>
-                            <module name="FileLength">
-                                <property name="max" value="1500" />
-                            </module>
-                            <module name="SuppressWarningsFilter" />
-                            <module name="LineLength">
-                                <property name="fileExtensions" value="java"/>
-                                <property name="max" value="150"/>
-                                <property name="ignorePattern"
-                                          value="^implements.*|^extends.*|^package.*|^import.*|a href|href|http://|https://|ftp://"/>
-                            </module>
-                            <module name="TreeWalker">
-                                <module name="LambdaBodyLength">
-                                    <property name="max" value="32"/>
-                                </module>
-                                <module name="AvoidNoArgumentSuperConstructorCall"/>
-                                <module name="CovariantEquals"/>
-                                <module name="DefaultComesLast"/>
-                                <module name="EqualsHashCode"/>
-                                <module name="NoFinalizer"/>
-                                <module name="ParameterAssignment"/>
-                                <module name="SuppressWarningsHolder" />
-                                <module name="IllegalImport" />
-                                <module name="RedundantImport" />
-                                <module name="UnusedImports" />
-                                <module name="MissingOverride" />
-                                <module name="JavadocType">
-                                    <property name="allowUnknownTags" value="true" />
-                                    <message value="class comment: miss javadoc comment." key="javadoc.missing" />
-                                </module>
-                                <module name="JavadocMethod">
-                                    <property name="accessModifiers" value="public"/>
-                                    <property name="allowMissingParamTags" value="true"/>
-                                    <property name="allowMissingReturnTag" value="true"/>
-                                    <property name="allowedAnnotations"
-                                              value="Override, Test, Before, After, BeforeClass, AfterClass,
-                                              Parameterized, Parameters, Bean, PostConstruct, ExceptionHandler,
-                                              PreDestroy"/>
-                                    <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF"/>
-                                </module>
-                                <module name="MissingJavadocMethod">
-                                    <property name="scope" value="public"/>
-                                    <property name="minLineCount" value="2"/>
-                                    <property name="allowedAnnotations"
-                                              value="Override, Test, Before, After, BeforeClass, AfterClass,
-                                              Parameterized, Parameters, Bean, PostConstruct"/>
-                                    <property name="ignoreMethodNamesRegex" value="^set[A-Z].*|^get[A-Z].*|main|init"/>
-                                    <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF"/>
-                                </module>
-                                <module name="TrailingComment" />
-                                <module name="LocalFinalVariableName" />
-                                <module name="LocalVariableName" />
-                                <module name="PackageName">
-                                    <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
-                                    <message key="name.invalidPattern"
-                                             value="Package name ''{0}'' must match pattern ''{1}''."/>
-                                </module>
-                                <module name="StaticVariableName" />
-                                <module name="TypeName">
-                                    <property name="severity" value="warning" />
-                                    <message value="name ''{0}'' should be ''{1}'' template." key="name.invalidPattern" />
-                                </module>
-                                <module name="MemberName" />
-                                <module name="MethodName" />
-                                <module name="ParameterName " />
-                                <module name="ConstantName" />
-                                <module name="ArrayTypeStyle" />
-                                <module name="UpperEll" />
-                                <module name="MethodLength">
-                                    <property name="tokens" value="METHOD_DEF" />
-                                    <property name="max" value="100" />
-                                </module>
-                                <module name="ParameterNumber">
-                                    <property name="max" value="8" />
-                                    <property name="ignoreOverriddenMethods" value="true" />
-                                    <property name="tokens" value="METHOD_DEF" />
-                                </module>
-                                <module name="MethodParamPad" />
-                                <module name="TypecastParenPad" />
-                                <module name="NoWhitespaceAfter" />
-                                <module name="NoWhitespaceBefore" />
-                                <module name="OperatorWrap" />
-                                <module name="ParenPad" />
-                                <module name="WhitespaceAfter" />
-                                <module name="WhitespaceAround" />
-                                <module name="ModifierOrder" />
-                                <module name="RedundantModifier" />
-                                <module name="AvoidNestedBlocks" />
-                                <module name="EmptyBlock" />
-                                <module name="LeftCurly" />
-                                <module name="NeedBraces" />
-                                <module name="RightCurly" />
-                                <module name="EmptyStatement" />
-                                <module name="HiddenField">
-                                    <property name="tokens" value="VARIABLE_DEF" />
-                                </module>
-                                <module name="IllegalInstantiation" />
-                                <module name="InnerAssignment" />
-                                <module name="MagicNumber">
-                                    <property name="ignoreNumbers" value="-1, 0, 0.5, 1, 2, 3, 4, 8, 10, 16" />
-                                    <property name="ignoreAnnotation" value="true" />
-                                    <property name="ignoreFieldDeclaration" value="true" />
-                                    <property name="ignoreHashCodeMethod" value="true" />
-                                    <property name="ignoreAnnotationElementDefaults" value="true" />
-                                    <property name="constantWaiverParentToken"
-                                              value="ASSIGN,ARRAY_INIT,EXPR,MINUS,TYPECAST,ELIST,DIV,PLUS"/>
-                                </module>
-                                <module name="MissingSwitchDefault" />
-                                <module name="SimplifyBooleanExpression" />
-                                <module name="SimplifyBooleanReturn" />
-                                <module name="FinalClass" />
-                                <module name="InterfaceIsType" />
-                                <module name="VisibilityModifier">
-                                    <property name="packageAllowed" value="true" />
-                                    <property name="protectedAllowed" value="true" />
-                                </module>
-                                <module name="StringLiteralEquality" />
-                                <module name="NestedForDepth">
-                                    <property name="max" value="2" />
-                                </module>
-                                <module name="NestedIfDepth">
-                                    <property name="max" value="3" />
-                                </module>
-                                <module name="Regexp">
-                                    <property name="format" value="System\.(out|err)\.print" />
-                                    <property name="illegalPattern" value="true" />
-                                </module>
-                                <module name="ReturnCount">
-                                    <property name="max" value="10" />
-                                </module>
-                                <module name="NestedTryDepth ">
-                                    <property name="max" value="3" />
-                                </module>
-                                <module name="SuperClone" />
-                                <module name="SuperFinalize" />
-                            </module>
-                        </module>
-                    </checkstyleRules>
+                    <configLocation>https://gitee.com/danielliu1123223/freeman-config/raw/master/checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
             <!-- spotbugs -->
@@ -522,6 +379,9 @@
             <id>aliyun-releases</id>
             <name>aliyun maven</name>
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -529,6 +389,9 @@
             <id>aliyun-releases</id>
             <name>aliyun maven</name>
             <url>https://packages.aliyun.com/maven/repository/2151940-release-L8VGZK/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 

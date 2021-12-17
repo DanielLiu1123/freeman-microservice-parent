@@ -61,7 +61,7 @@ public class WebBootTest {
     }
 
     @Test
-    public void testBizExceptionHandler() {
+    public void testExceptionHandler() {
         assertThrows(HttpServerErrorException.InternalServerError.class,
                 () -> restTemplate.getForObject("http://localhost:8081/biz_exception", String.class));
     }

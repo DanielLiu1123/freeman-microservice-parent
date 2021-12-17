@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment;
 public final class EnvUtil {
     private static Environment environment;
 
-    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public void setEnvironment(Environment environment) {
         EnvUtil.environment = environment;
     }
