@@ -57,7 +57,8 @@ public class MongoDynamicAutoConfiguration {
                                          MongoDynamicProperties properties) {
         Assert.notNull(properties.getDatasources(), "datasources not null");
 
-        DynamicMongoTemplate dynamicMongoTemplate = new DynamicMongoTemplate(factory, converter);
+        MongoTemplate template = new MongoTemplate(factory, converter);
+        DynamicMongoTemplate dynamicMongoTemplate = new DynamicMongoTemplate(factory, converter, template);
 
         // 映射关系 集合名 -> 连接名
         Map<String, String> mappings = new HashMap<>(32);

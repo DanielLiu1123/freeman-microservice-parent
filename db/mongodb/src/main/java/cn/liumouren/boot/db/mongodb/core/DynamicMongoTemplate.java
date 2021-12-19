@@ -48,11 +48,14 @@ public class DynamicMongoTemplate extends MongoTemplate {
 
     private Map<String, MongoTemplate> templateMappings;
     private Map<String, String> collectionNameDsMappings;
+    private MongoTemplate defaultTemplate;
 
 
     public DynamicMongoTemplate(MongoDatabaseFactory mongoDbFactory,
-                                MongoConverter mongoConverter) {
+                                MongoConverter mongoConverter,
+                                MongoTemplate defaultTemplate) {
         super(mongoDbFactory, mongoConverter);
+        this.defaultTemplate = defaultTemplate;
     }
 
     @Override
@@ -492,7 +495,7 @@ public class DynamicMongoTemplate extends MongoTemplate {
             }
         }
         // 使用默认
-        return this;
+        return defaultTemplate;
     }
 
 }

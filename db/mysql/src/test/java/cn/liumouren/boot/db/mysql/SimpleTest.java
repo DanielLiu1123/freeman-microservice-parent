@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * @date 2021/12/9 10:30
  */
 public class SimpleTest {
-    @Test
+//    @Test
     public void test_snowFlake(){
         SnowflakeKeyGenerateAlgorithm algorithm = new SnowflakeKeyGenerateAlgorithm();
         ReflectUtil.setFieldValue(algorithm, "workerId", 110);
