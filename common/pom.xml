@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>common</name>
     <artifactId>freeman-common-boot</artifactId>
     <description>freeman boot项目的common模块</description>
 

@@ -13,20 +13,21 @@ spring-boot 集成所用的工具包
 - [x] 给所有 FeignClient 一个默认的配置
   - 自定义 Contract 和 ErrorDecoder
 - [ ] 针对 FeignClient 调用的定制处理
-- [ ] Loadbalancer 相关问题
-    - [ ] cache 选择
-    - [ ] 负载均衡策略选择
+  
+3. loadbalancer
+- [x] k8s 服务端负载均衡
+- [ ] 客户端整合 k8s 负载均衡
     
-3. web  
+4. web  
 针对 web 做的集成
 - [x] 可选的日志打印
 - [x] 可选的异常处理
 - [x] 自定义注解解析
 - [ ] 可选的安全校验
 
-4. cache
+5. cache
 
-5. db
+6. db
 - [x] mysql 动态数据源 (使用sharding-jdbc)
 - [x] mongo 动态数据源
 

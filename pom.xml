@@ -12,6 +12,7 @@
         <module>redis</module>
         <module>starter</module>
         <module>db</module>
+        <module>loadbalancer</module>
     </modules>
 
     <parent>
@@ -183,6 +184,26 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-db-mysql-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-server-side-loadbalancer-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-client-side-loadbalancer-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-server-side-loadbalancer-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-client-side-loadbalancer-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

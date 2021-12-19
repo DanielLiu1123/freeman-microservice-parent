@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>openfeign</name>
     <artifactId>freeman-openfeign-boot</artifactId>
 
    <dependencies>
@@ -20,14 +21,6 @@
        <dependency>
            <groupId>io.github.openfeign</groupId>
            <artifactId>feign-okhttp</artifactId>
-       </dependency>
-       <dependency>
-           <groupId>org.springframework.cloud</groupId>
-           <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-       </dependency>
-       <dependency>
-           <groupId>com.github.ben-manes.caffeine</groupId>
-           <artifactId>caffeine</artifactId>
        </dependency>
        <dependency>
            <groupId>cn.liumouren</groupId>

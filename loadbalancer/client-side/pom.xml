@@ -3,22 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>integration-test</artifactId>
+        <artifactId>loadbalancer</artifactId>
         <groupId>cn.liumouren</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>openfeign</artifactId>
+    <artifactId>freeman-client-side-loadbalancer-boot</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>cn.liumouren</groupId>
-            <artifactId>freeman-web-boot</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.liumouren</groupId>
-            <artifactId>freeman-openfeign-boot</artifactId>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
     </dependencies>
 

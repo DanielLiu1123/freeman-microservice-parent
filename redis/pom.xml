@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>redis</name>
     <artifactId>freeman-redis-boot</artifactId>
     <description>redis集成</description>
 

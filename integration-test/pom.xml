@@ -12,11 +12,11 @@
     <artifactId>integration-test</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>common-default-config</module>
-        <module>openfeign</module>
-        <module>microservice</module>
-        <module>sharding-jpa</module>
-        <module>k8s</module>
+        <module>it-common-default-config</module>
+        <module>it-openfeign</module>
+        <module>it-microservice</module>
+        <module>it-sharding-jpa</module>
+        <module>it-k8s</module>
     </modules>
 
     <properties>

@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>mongodb</name>
     <artifactId>freeman-db-mongodb-boot</artifactId>
 
     <dependencies>

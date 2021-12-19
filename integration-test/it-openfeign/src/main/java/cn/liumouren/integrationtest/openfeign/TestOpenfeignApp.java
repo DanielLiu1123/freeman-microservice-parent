@@ -1,8 +1,8 @@
 package cn.liumouren.integrationtest.openfeign;
 
+import cn.liumouren.integrationtest.openfeign.api.HardCodeApi;
 import cn.liumouren.integrationtest.openfeign.api.SomeApi;
 import feign.Logger;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +37,9 @@ public class TestOpenfeignApp implements ApplicationRunner {
     @Autowired
     @Qualifier("cn.liumouren.integrationtest.openfeign.api.SomeApi")
     SomeApi someApi;
+    @Autowired
+    @Qualifier("cn.liumouren.integrationtest.openfeign.api.HardCodeApi")
+    HardCodeApi hardCodeApi;
 //    @Autowired
 //    User user1;
 //    @Autowired
@@ -47,6 +50,7 @@ public class TestOpenfeignApp implements ApplicationRunner {
         System.out.println(someApi.getClass());
         String freeman = someApi.some("freeman");
         System.out.println(freeman);
+        System.out.println(hardCodeApi);
 //        System.out.println(user1);
 //        System.out.println(user2);
 //        String[] names1 = context.getBeanNamesForAnnotation(A.class);
@@ -74,7 +78,6 @@ class User {
 }
 
 @Component
-@A
 class TestFactoryBean implements FactoryBean<User> {
 
     {
