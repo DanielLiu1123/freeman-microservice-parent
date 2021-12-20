@@ -17,6 +17,7 @@
         <module>it-microservice</module>
         <module>it-sharding-jpa</module>
         <module>it-k8s</module>
+        <module>it-loadbalancer-client-side</module>
     </modules>
 
     <properties>
