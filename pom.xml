@@ -64,6 +64,7 @@
     </properties>
 
     <dependencyManagement>
+        <!-- TODO xxx-boot 包不应该放在这里? -->
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -79,6 +80,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <!-- 统一工具类 hutool https://www.hutool.cn/ -->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -92,12 +94,14 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+
             <!-- 统一 JSON 序列化工具 fastjson  -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+
             <!-- spotbugs -->
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
@@ -111,12 +115,14 @@
                 <version>${spotbugs.version}</version>
                 <optional>true</optional>
             </dependency>
+
             <!-- druid -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid-starter.version}</version>
             </dependency>
+
             <!-- shardingsphere -->
             <dependency>
                 <groupId>org.apache.shardingsphere</groupId>
@@ -135,6 +141,8 @@
                 <artifactId>shardingsphere-transaction-base-seata-at</artifactId>
                 <version>${shardingsphere.version}</version>
             </dependency>
+            <!-- shardingsphere end -->
+
             <!-- inner -->
             <dependency>
                 <groupId>cn.liumouren</groupId>
@@ -163,6 +171,16 @@
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-server-side-loadbalancer-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-client-side-loadbalancer-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -184,16 +202,6 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-db-mysql-boot-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.liumouren</groupId>
-                <artifactId>freeman-server-side-loadbalancer-boot</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.liumouren</groupId>
-                <artifactId>freeman-client-side-loadbalancer-boot</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -403,6 +411,30 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+        	<id>spring.release</id>
+        	<name>Spring GA Repository</name>
+        	<url>https://repo.spring.io/release</url>
+        	<snapshots>
+        		<enabled>false</enabled>
+        	</snapshots>
+        </repository>
+        <repository>
+        	<id>spring.milestone</id>
+        	<name>Spring Milestone Repository</name>
+        	<url>https://repo.spring.io/milestone</url>
+        	<snapshots>
+        		<enabled>false</enabled>
+        	</snapshots>
+        </repository>
+        <repository>
+        	<id>spring.snapshot</id>
+        	<name>Spring Snapshot Repository</name>
+        	<url>https://repo.spring.io/snapshot</url>
+        	<releases>
+        		<enabled>false</enabled>
+        	</releases>
         </repository>
     </repositories>
     <pluginRepositories>

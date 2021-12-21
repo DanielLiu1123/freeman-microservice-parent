@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @FeignClient("client-side-app")
 @Namespace("api")
-public interface ClientSideApi {
+public interface OtherApi {
 
-    @GetMapping("/get")
-    String get();
+    @GetMapping("/getOther")
+    String getOther();
 }

@@ -3,20 +3,14 @@ package cn.liumouren.boot.lb.clientside;
 import cn.hutool.core.util.ReflectUtil;
 import cn.liumouren.boot.lb.clientside.component.K8sDiscoveryClient;
 import cn.liumouren.boot.lb.clientside.component.SmartFeignBlockingLoadBalancerClient;
+import cn.liumouren.boot.lb.common.FreemanK8sDiscoveryProperties;
 import feign.Client;
 import feign.okhttp.OkHttpClient;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerProperties;
-import org.springframework.cloud.loadbalancer.cache.LoadBalancerCacheManager;
-import org.springframework.cloud.loadbalancer.config.LoadBalancerCacheAutoConfiguration;
-import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
-import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration;
-import org.springframework.cloud.openfeign.loadbalancer.OnRetryNotEnabledCondition;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -26,12 +20,12 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/12/20 14:17
  */
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(LoadbalancerClientSideProperties.class)
+@EnableConfigurationProperties(FreemanK8sDiscoveryProperties.class)
 public class LbClientSideAutoConfiguration {
 
     @Bean
-    public K8sDiscoveryClient k8sDiscoveryClient() {
-        return new K8sDiscoveryClient();
+    public K8sDiscoveryClient k8sDiscoveryClient(FreemanK8sDiscoveryProperties properties) {
+        return new K8sDiscoveryClient(properties);
     }
 
     @Bean

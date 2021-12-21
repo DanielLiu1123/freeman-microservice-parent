@@ -13,8 +13,19 @@
     <modules>
         <module>server-side</module>
         <module>client-side</module>
+        <module>loadbalancer-common</module>
     </modules>
 
     <artifactId>loadbalancer</artifactId>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>loadbalancer-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

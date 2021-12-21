@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: server-side-app
+  datasource:
+    name: 10098
+
+freeman:
+  discovery:
+    k8s:
+      namespace: api
+      mappings:
+        api:
+          - user
+          - order
+        gateway:
+          - inner-gateway
+          - outer-gateway

@@ -18,6 +18,7 @@
         <module>it-sharding-jpa</module>
         <module>it-k8s</module>
         <module>it-loadbalancer-client-side</module>
+        <module>it-loadbalancer-server-side</module>
     </modules>
 
     <properties>

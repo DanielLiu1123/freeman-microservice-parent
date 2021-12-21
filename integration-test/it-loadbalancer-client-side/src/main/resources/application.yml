@@ -11,8 +11,19 @@ spring:
       cache:
         # 会使新增实例最多在 ttl 时间内没有流量进入
         ttl: 30s
-        # 一个 NamedContextFactory 会消耗一个, 16 已经比较充足
-        capacity: 16
+        # 一个 NamedContextFactory 会消耗一个, 32 已经比较充足
+        capacity: 32
 logging:
   level:
     cn.liumouren: debug
+
+freeman:
+  discovery:
+    k8s:
+      namespace: api
+      mappings:
+        api:
+          - client-side-app
+          - order
+        default:
+          - user

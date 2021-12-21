@@ -45,7 +45,7 @@ public class ClientSideApp implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 等待服务注册完成
-        ThreadUtil.sleep(3_000);
+        ThreadUtil.sleep(2_000);
 
         ThreadUtil.execAsync(() -> System.out.println(api.get()));
     }
