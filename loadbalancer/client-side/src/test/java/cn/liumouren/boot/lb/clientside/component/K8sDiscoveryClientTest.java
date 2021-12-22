@@ -12,7 +12,7 @@ public class K8sDiscoveryClientTest {
     @Test
     public void test_k8sApi(){
         K8sDiscoveryClient client = new K8sDiscoveryClient();
-        System.out.println(client.getInstances("kube-dns"));
+        System.out.println(client.getInstances("order"));
     }
 
     @Test

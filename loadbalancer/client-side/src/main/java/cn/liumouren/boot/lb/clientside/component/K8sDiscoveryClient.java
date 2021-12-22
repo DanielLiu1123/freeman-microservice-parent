@@ -35,7 +35,10 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
     private CoreV1Api api = new CoreV1Api();
     private FreemanK8sDiscoveryProperties properties;
     private ApplicationContext applicationContext;
-    private Set<String> namespaces;
+    /**
+     * namespace -> [service01,service-02]
+     */
+    private Map<String, List<String>> mappings = new HashMap<>();
 
     public K8sDiscoveryClient(FreemanK8sDiscoveryProperties properties) {
         this.properties = properties;
@@ -63,11 +66,11 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
             String namespace = getNamespace(serviceId);
             V1ServiceList serviceList = api.listNamespacedService(namespace, null, null, null, "metadata.name=" + serviceId, null, null, null, null, null, null);
             if (serviceList.getItems() == null || serviceList.getItems().size() == 0) {
-                LOGGER.warn("k8s doesn't contain serviceId: " + serviceId);
+                LOGGER.warn("k8s doesn't contain serviceId [" + serviceId + "] in namespace [" + namespace + "]");
                 return Collections.emptyList();
             }
             if (serviceList.getItems().size() > 1) {
-                LOGGER.warn("serviceId: " + serviceId + " count is more than 1, please change another service name, using first ...");
+                LOGGER.warn("serviceId [" + serviceId + "] in namespace [" + namespace + "] count is more than 1, please change another service name, using first ...");
             }
 
             V1Service service = serviceList.getItems().get(0);
@@ -82,71 +85,64 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
         }
     }
 
-//    @Override
-//    public List<String> getServices() {
-//        try {
-//            // 根据配置获取所有已配置的命名空间的 svc
-//            Set<String> namespaces = getConfigNamespaces();
-//            Set<String> services = new HashSet<>();
-//            for (String namespace : namespaces) {
-//                V1ServiceList serviceList = api.listNamespacedService(namespace, null, null, null, null, null, null, null, null, null, null);
-//                List<String> servicesForNamespace = serviceList.getItems().stream()
-//                        .map(svc -> svc.getMetadata().getName())
-//                        .collect(Collectors.toList());
-//                services.addAll(servicesForNamespace);
-//            }
-//            return new ArrayList<>(services);
-//        } catch (Exception e) {
-//            LOGGER.error("get service name from k8s fail,", e);
-//            return Collections.emptyList();
-//        }
-//    }
-
     @Override
     public List<String> getServices() {
         try {
-            return new ArrayList<>(getAllServiceId());
+            return mappings.values().stream()
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             LOGGER.error("get service name from k8s fail,", e);
             return Collections.emptyList();
         }
     }
 
-    private Set<String> getAllServiceId() {
-        // 根据 @FeignClient 注解获取所有的 svc
-        Set<String> result = new LinkedHashSet<>();
-        List<String> feigns = Arrays.stream(applicationContext.getBeanNamesForAnnotation(FeignClient.class))
+    private List<String> getFeignClientBeanNames(ApplicationContext applicationContext) {
+        return Arrays.stream(applicationContext.getBeanNamesForAnnotation(FeignClient.class))
                 .filter(s -> s.contains(".")) // 过滤掉 controller
                 .collect(Collectors.toList());
+    }
+
+    private void populateMappings() {
+        Map<String, String> serviceNamespaceMapping = new HashMap<>();
+
+        // 先找配置文件
+        for (Map.Entry<String, List<String>> namespaceServices : properties.getMappings().entrySet()) {
+            for (String svc : namespaceServices.getValue()) {
+                serviceNamespaceMapping.put(svc, namespaceServices.getKey());
+            }
+        }
+
+        // 再找 @Namespace 注解, 会覆盖配置文件
+        List<String> feigns = getFeignClientBeanNames(applicationContext);
         for (String feign : feigns) {
             try {
-                FeignClient annotation = Class.forName(feign).getAnnotation(FeignClient.class);
-                Optional.ofNullable(AnnotationUtils.getValue(annotation))
-                        .ifPresent(val -> result.add(val.toString()));
+                Class<?> clz = Class.forName(feign);
+                FeignClient fcAnno = clz.getAnnotation(FeignClient.class);
+                Namespace nsAnno = clz.getAnnotation(Namespace.class);
+                Object svc = AnnotationUtils.getValue(fcAnno);
+                Object ns = AnnotationUtils.getValue(nsAnno);
+                if (svc != null && ns != null) {
+                    serviceNamespaceMapping.put(svc.toString(), ns.toString());
+                }
             } catch (ClassNotFoundException ignored) {
             }
         }
-        return result;
-    }
 
-    private Set<String> getConfigNamespaces() {
-        if (namespaces == null) {
-            // 扫描 @Namespace 注解
-            namespaces = new LinkedHashSet<>();
-            List<String> feigns = Arrays.stream(applicationContext.getBeanNamesForAnnotation(FeignClient.class))
-                    .filter(s -> s.contains(".")) // 过滤掉 controller
-                    .collect(Collectors.toList());
-            for (String feign : feigns) {
-                try {
-                    Namespace namespace = Class.forName(feign).getAnnotation(Namespace.class);
-                    if (namespace != null) {
-                        namespaces.add(namespace.value());
-                    }
-                } catch (ClassNotFoundException ignored) {
+        Set<String> nss = new HashSet<>(serviceNamespaceMapping.values());
+        for (String ns : nss) {
+            for (Map.Entry<String, String> svcNamespace : serviceNamespaceMapping.entrySet()) {
+                if (Objects.equals(ns, svcNamespace.getValue())) {
+                    List<String> svcs = new ArrayList<>();
+                    svcs.add(svcNamespace.getKey());
+                    mappings.merge(ns, svcs, (oldVal, newVal) -> {
+                        oldVal.addAll(newVal);
+                        return oldVal;
+                    });
                 }
             }
         }
-        return namespaces;
     }
 
     private String getLabelSelectors(V1Service service) {
@@ -180,13 +176,10 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
     }
 
     private String getNamespace(String serviceId) {
-        Map<String, List<String>> map = properties.getMappings();
-        if (map != null) {
-            for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-                for (String svc : entry.getValue()) {
-                    if (Objects.equals(serviceId, svc)) {
-                        return entry.getKey();
-                    }
+        for (Map.Entry<String, List<String>> namespaceServices : mappings.entrySet()) {
+            for (String svc : namespaceServices.getValue()) {
+                if (Objects.equals(svc, serviceId)) {
+                    return namespaceServices.getKey();
                 }
             }
         }
@@ -196,6 +189,7 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+        populateMappings();
     }
 
 }
