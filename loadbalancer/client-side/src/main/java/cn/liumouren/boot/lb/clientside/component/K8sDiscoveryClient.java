@@ -108,9 +108,13 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
         Map<String, String> serviceNamespaceMapping = new HashMap<>();
 
         // 先找配置文件
-        for (Map.Entry<String, List<String>> namespaceServices : properties.getMappings().entrySet()) {
-            for (String svc : namespaceServices.getValue()) {
-                serviceNamespaceMapping.put(svc, namespaceServices.getKey());
+        if (properties.getMappings() != null) {
+            for (Map.Entry<String, List<String>> namespaceServices : properties.getMappings().entrySet()) {
+                if (namespaceServices != null) {
+                    for (String svc : namespaceServices.getValue()) {
+                        serviceNamespaceMapping.put(svc, namespaceServices.getKey());
+                    }
+                }
             }
         }
 
