@@ -163,9 +163,9 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
         K8sServiceInstance instance = new K8sServiceInstance();
         instance.setHost(pod.getStatus().getPodIP());
         try {
-            instance.setPort(pod.getSpec().getContainers().get(0).getPorts().get(0).getHostPort());
+            instance.setPort(pod.getSpec().getContainers().get(0).getPorts().get(0).getContainerPort());
         } catch (Exception e) {
-            instance.setPort(-1);
+            instance.setPort(80);
         }
         instance.setSecure(false);
         instance.setServiceId(serviceId);
