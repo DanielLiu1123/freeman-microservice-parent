@@ -1,0 +1,30 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user
+          # {serviceId}.{namespace}
+          uri: http://user.default
+          predicates:
+            - Path: /*/user/**
+        - id: order
+          uri: http://order.api
+          predicates:
+            - Path: /*/order/**
+    sentinel:
+      filter:
+        enabled: false
+      scg:
+        fallback:
+          mode: response
+          response-status: 429
+          content-type: text/html;charset=utf-8
+          response-body: '服务器繁忙, 请稍后再试!'
+freeman:
+  gateway:
+    rules:
+      flows:
+        - resource: user
+          count: 10
+        - resource: order
+          count: 5

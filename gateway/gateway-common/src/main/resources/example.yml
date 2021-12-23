@@ -1,0 +1,11 @@
+freeman:
+  gateway:
+    rules:
+      flows:
+        - resource: user
+          count: 2
+        - resource: order
+          count: 10
+
+
+
