@@ -20,7 +20,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.Socket;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,9 +99,4 @@ public class SmartFeignBlockingLoadBalancerClientTest {
         return result;
     }
 
-    @Test
-    public void test_ping() throws IOException {
-        Socket socket = new Socket("0.0.0.0", 10098);
-        System.out.println(socket.getPort());
-    }
 }

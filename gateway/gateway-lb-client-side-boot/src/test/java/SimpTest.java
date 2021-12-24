@@ -7,7 +7,6 @@ import reactor.util.retry.Retry;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,11 +54,11 @@ public class SimpTest {
                     System.out.println(e + " at " + LocalTime.now());
                 })
                 .retryWhen(Retry
-                        .backoff(3, Duration.ofMillis(100)).jitter(0d)
+                        .backoff(3, Duration.ofMillis(10)).jitter(0d)
                         .doAfterRetry(rs -> System.out.println("retried at " + LocalTime.now() + ", attempt " + (rs.totalRetries() + 1)))
                         .onRetryExhaustedThrow((spec, rs) -> rs.failure())
                 )
                 .subscribe();
-        ThreadUtil.sleep(100000L);
+        ThreadUtil.sleep(3000L);
     }
 }
