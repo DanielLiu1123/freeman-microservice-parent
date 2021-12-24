@@ -182,6 +182,16 @@
             </dependency>
             <dependency>
                 <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-gateway-lb-server-side-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-gateway-lb-client-side-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -213,6 +223,16 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-client-side-loadbalancer-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-gateway-lb-server-side-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-gateway-lb-client-side-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

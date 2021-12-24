@@ -2,3 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.liumouren.boot.gateway.lb.clientside.GatewayLbClientSideAutoConfiguration
 org.springframework.boot.env.EnvironmentPostProcessor=\
   cn.liumouren.boot.gateway.lb.clientside.GatewayLbClientSideEnvironmentPostProcessor
+org.springframework.context.ApplicationListener=\
+  cn.liumouren.boot.gateway.lb.clientside.GatewayLbClientSideEnvironmentPostProcessor

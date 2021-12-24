@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user
+          uri: lb://user
+          predicates:
+            - Path=/*/user/**
+          metadata:
+            namespace: default
+        - id: order
+          uri: lb://order
+          predicates:
+            - Path=/*/order/**
+          metadata:
+            namespace: api
+freeman:
+  gateway:
+    rules:
+      flows:
+        - resource: user
+          count: 1
+        - resource: order
+          count: 3

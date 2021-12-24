@@ -3,7 +3,6 @@ package cn.liumouren.boot.gateway.lb.clientside;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerProperties;
-import org.springframework.cloud.gateway.config.GatewayAutoConfiguration;
 import org.springframework.cloud.gateway.config.GatewayLoadBalancerProperties;
 import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.cloud.gateway.config.GatewayReactiveLoadBalancerClientAutoConfiguration;
@@ -19,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/12/23 20:23
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore({GatewayAutoConfiguration.class, GatewayReactiveLoadBalancerClientAutoConfiguration.class})
+@AutoConfigureBefore(GatewayReactiveLoadBalancerClientAutoConfiguration.class)
 public class GatewayLbClientSideAutoConfiguration {
 
     @Bean

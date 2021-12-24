@@ -19,6 +19,8 @@
         <module>it-k8s</module>
         <module>it-loadbalancer-client-side</module>
         <module>it-loadbalancer-server-side</module>
+        <module>it-gateway-lb-clientside</module>
+        <module>it-gateway-lb-serverside</module>
     </modules>
 
     <properties>

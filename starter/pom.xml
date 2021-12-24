@@ -17,6 +17,8 @@
         <module>freeman-db-mysql-boot-starter</module>
         <module>freeman-server-side-loadbalancer-boot-starter</module>
         <module>freeman-client-side-loadbalancer-boot-starter</module>
+        <module>freeman-gateway-lb-client-side-boot-starter</module>
+        <module>freeman-gateway-lb-server-side-boot-starter</module>
     </modules>
 
     <artifactId>starter</artifactId>

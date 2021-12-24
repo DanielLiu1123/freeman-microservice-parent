@@ -1,4 +1,4 @@
-package cn.liumouren.boot.gateway.lb.clientside;
+package cn.liumouren.boot.gateway.lb.serverside;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author freeman
  * @date 2021/12/24 02:45
  */
-public class GatewayLbClientSideEnvironmentPostProcessor implements EnvironmentPostProcessor, ApplicationListener<ApplicationEnvironmentPreparedEvent>, Ordered {
+public class GatewayLbServerSideEnvironmentPostProcessor implements EnvironmentPostProcessor, ApplicationListener<ApplicationEnvironmentPreparedEvent>, Ordered {
     private static final DeferredLog LOGGER = new DeferredLog();
 
     /**
@@ -34,7 +34,7 @@ public class GatewayLbClientSideEnvironmentPostProcessor implements EnvironmentP
      * 默认加载的配置
      */
     private static final String[] LOCATIONS = {
-            "defaultconfig/gateway-lb-clientside.yml"
+            "defaultconfig/gateway-lb-serverside.yml"
     };
 
     @Override
@@ -64,7 +64,7 @@ public class GatewayLbClientSideEnvironmentPostProcessor implements EnvironmentP
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
         if (IS_PRINTED.compareAndSet(false, true)) {
-            LOGGER.replayTo(GatewayLbClientSideEnvironmentPostProcessor.class);
+            LOGGER.replayTo(GatewayLbServerSideEnvironmentPostProcessor.class);
         }
     }
 
