@@ -64,6 +64,14 @@
         <githook.plugin.skip>false</githook.plugin.skip>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <!-- TODO xxx-boot 包不应该放在这里? -->
         <dependencies>
@@ -190,6 +198,7 @@
                 <artifactId>freeman-gateway-lb-client-side-boot</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- inner starter -->
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-web-boot-starter</artifactId>
