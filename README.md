@@ -44,4 +44,5 @@ NOTE:
 check 一下能否把插件也打包到 aliyun ???
 
 TODO:
+kubernetes-maven-plugin 取消生成就绪检测
 

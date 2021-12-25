@@ -1,5 +1,6 @@
 package cn.liumouren.boot.db.mongodb;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -34,7 +35,7 @@ public class MongoTemplateTest {
     @Autowired
     private DefaultListableBeanFactory beanFactory;
 
-    @Test
+//    @Test
     public void test_mongoTemplate() {
         System.out.println(Arrays.toString(beanFactory.getBeanNamesForType(MongoOperations.class)));
         System.out.println(mongoTemplate);
@@ -52,7 +53,7 @@ public class MongoTemplateTest {
         System.out.println(byId.get());
     }
 
-    @Test
+//    @Test
     public void test_user() {
         User user = new User()
                 .setId("111")
@@ -64,7 +65,7 @@ public class MongoTemplateTest {
         System.out.println(byId.get());
     }
 
-    @Test
+//    @Test
     public void test_order() {
         Order order = new Order()
                 .setId("111")
@@ -76,7 +77,7 @@ public class MongoTemplateTest {
         System.out.println(byId.get());
     }
 
-    @Test
+//    @Test
     public void test_findUserInOrderDb() {
         Optional<User> byId = userDao.findById("111");
         System.out.println(byId);
@@ -86,5 +87,6 @@ public class MongoTemplateTest {
     @EnableAutoConfiguration
     static class Config {
     }
+
 }
 
