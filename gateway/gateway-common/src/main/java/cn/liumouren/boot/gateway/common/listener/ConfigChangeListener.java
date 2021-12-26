@@ -26,13 +26,9 @@ public class ConfigChangeListener implements ApplicationListener<RefreshScopeRef
 
     @Override
     public void onApplicationEvent(RefreshScopeRefreshedEvent event) {
-        if (properties.getFlows() == null) {
-            return;
-        }
-
         // TODO 保留数据源中的规则?
         GatewayRuleManager.loadRules(new HashSet<>(properties.getFlows()));
 
-        LOGGER.info("更新配置: {}", JSON.toJSONString(properties.getFlows(), SerializerFeature.PrettyFormat));
+        LOGGER.info("更新流控配置: {}", JSON.toJSONString(properties.getFlows(), SerializerFeature.PrettyFormat));
     }
 }

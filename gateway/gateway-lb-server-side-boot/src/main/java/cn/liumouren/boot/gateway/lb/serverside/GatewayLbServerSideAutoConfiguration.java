@@ -13,10 +13,14 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,7 +78,14 @@ public class GatewayLbServerSideAutoConfiguration {
                 exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, URI.create(url));
             }
 
-            return chain.filter(exchange);
+            return chain.filter(exchange)
+                    // 有路由记录, 但是没有对应服务时, k8s dns 解析会失败, 报 500 错误, 应该返回 '无可用服务'
+                    .onErrorResume(UnknownHostException.class, e -> {
+                        ServerHttpResponse response = exchange.getResponse();
+                        response.setStatusCode(HttpStatus.NOT_FOUND);
+                        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                        return response.writeWith(Mono.just(response.bufferFactory().wrap(String.format("暂无可用[%s]服务", uri.getHost()).getBytes())));
+                    });
         }
 
 

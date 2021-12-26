@@ -244,6 +244,7 @@
                 <artifactId>freeman-gateway-lb-client-side-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- inner end -->
         </dependencies>
     </dependencyManagement>
 

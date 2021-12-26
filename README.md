@@ -42,7 +42,9 @@ spring-boot 集成所用的工具包
 
 NOTE:  
 check 一下能否把插件也打包到 aliyun ???
+我们同时需要就绪检测(防止流量进入)和存活检测(重启pod)
 
 TODO:
-kubernetes-maven-plugin 取消生成就绪检测
+gateway 调优和压测
+
 

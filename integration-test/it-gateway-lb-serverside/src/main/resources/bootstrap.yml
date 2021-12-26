@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
 spring:
   application:
     name: gateway
@@ -9,3 +9,11 @@ spring:
         server-addr: 106.54.76.182:8848
         name: gateway
         file-extension: yml
+#    gateway:
+#      httpclient:
+#        pool:
+#          name: freeman
+#          type: elastic
+#          max-idle-time:
+#          max-life-time:
+#        max-header-size:
