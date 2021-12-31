@@ -20,10 +20,11 @@ public class MongoDynamicProperties {
     public static final String PREFIX = "spring.data.mongodb.dynamic";
 
     private boolean enable = true;
+
     private Map<String, MongoConfig> datasources;
 
     @Data
-    static class MongoConfig {
+    public static class MongoConfig {
         /**
          * 连接信息
          */

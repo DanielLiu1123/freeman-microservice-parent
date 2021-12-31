@@ -13,5 +13,3 @@ spring:
             uri: mongodb://localhost:27017/freeman_product
             include:
             exclude:
-  main:
-    allow-bean-definition-overriding: true

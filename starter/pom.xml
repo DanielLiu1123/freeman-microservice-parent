@@ -19,6 +19,8 @@
         <module>freeman-client-side-loadbalancer-boot-starter</module>
         <module>freeman-gateway-lb-client-side-boot-starter</module>
         <module>freeman-gateway-lb-server-side-boot-starter</module>
+        <module>freeman-openfeign-lb-client-side-boot-starter</module>
+        <module>freeman-openfeign-lb-server-side-boot-starter</module>
     </modules>
 
     <artifactId>starter</artifactId>

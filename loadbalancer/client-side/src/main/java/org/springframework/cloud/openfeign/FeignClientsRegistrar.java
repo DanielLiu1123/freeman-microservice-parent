@@ -16,7 +16,6 @@
 
 package org.springframework.cloud.openfeign;
 
-import cn.liumouren.boot.lb.common.Namespace;
 import feign.Request;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.BeansException;
@@ -50,13 +49,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
-import static cn.liumouren.boot.lb.common.FreemanK8sDiscoveryProperties.DEFAULT_NAMESPACE;
-import static cn.liumouren.boot.lb.common.FreemanK8sDiscoveryProperties.PREFIX;
-
 /**
- * <p> note: 没有找到更好的解决方案
- * <p> 主要给 feignClient 设置 url, 我们采用 server 端负载均衡
- * <p> url 格式: http://{serviceId}.{namespace}
+ * <p> 主要目的: 消除 spring.main.allow-bean-definition-overriding=true 配置
  *
  * @author Spencer Gibb
  * @author Jakub Narloch
@@ -206,8 +200,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
             return;
         }
 
-        processUrl(annotationMetadata, attributes);
-
         String className = annotationMetadata.getClassName();
         Class clazz = ClassUtils.resolveClassName(className, null);
         ConfigurableBeanFactory beanFactory = registry instanceof ConfigurableBeanFactory
@@ -258,24 +250,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
 
         registerOptionsBeanDefinition(registry, contextId);
-    }
-
-    private void processUrl(AnnotationMetadata annotationMetadata, Map<String, Object> attributes) {
-        // if 'url' not set, we use attr 'name'
-        // because we use server-side load-balance
-        // 对于没有 @Namespace 注解的 api, 我们可以通过配置文件手动配置, 但是优先使用 @Namespace 上的值
-        if (attributes != null && !StringUtils.hasText(attributes.get("url").toString())) {
-            // 先检查配置
-            String serviceId = attributes.get("value").toString();
-            if (StringUtils.hasText(serviceId)) {
-                attributes.put("url", "http://" + serviceId + "." + getNamespace(serviceId));
-            }
-            // 再检查 @Namespace 注解
-            if (annotationMetadata.hasAnnotation(Namespace.class.getName())) {
-                String namespace = annotationMetadata.getAnnotationAttributes(Namespace.class.getName()).get("value").toString();
-                attributes.put("url", "http://" + serviceId + "." + namespace);
-            }
-        }
     }
 
     private void validate(Map<String, Object> attributes) {
@@ -465,22 +439,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
 
     private boolean isClientRefreshEnabled() {
         return environment.getProperty("feign.client.refresh-enabled", Boolean.class, false);
-    }
-
-    @SuppressWarnings("unchecked")
-    private String getNamespace(String serviceId) {
-        // TODO not work now !!!
-        Map<String, List<String>> map = (Map<String, List<String>>) environment.getProperty(PREFIX + ".mappings", Map.class);
-        if (map != null) {
-            for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-                for (String svc : entry.getValue()) {
-                    if (Objects.equals(serviceId, svc)) {
-                        return entry.getKey();
-                    }
-                }
-            }
-        }
-        return DEFAULT_NAMESPACE;
     }
 
     @Override
