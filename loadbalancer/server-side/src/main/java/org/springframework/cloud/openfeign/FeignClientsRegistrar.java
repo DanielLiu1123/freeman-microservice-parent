@@ -16,6 +16,7 @@
 
 package org.springframework.cloud.openfeign;
 
+import cn.hutool.core.util.ReUtil;
 import cn.liumouren.boot.lb.common.Namespace;
 import feign.Request;
 import org.springframework.aop.scope.ScopedProxyUtils;
@@ -30,12 +31,15 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -49,6 +53,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static cn.liumouren.boot.lb.common.FreemanK8sDiscoveryProperties.DEFAULT_NAMESPACE;
 import static cn.liumouren.boot.lb.common.FreemanK8sDiscoveryProperties.PREFIX;
@@ -202,10 +208,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
 
     private void registerFeignClient(BeanDefinitionRegistry registry, AnnotationMetadata annotationMetadata,
                                      Map<String, Object> attributes) {
-        if (beanFactory.containsBean(annotationMetadata.getClassName())) {
-            return;
-        }
-
         processUrl(annotationMetadata, attributes);
 
         String className = annotationMetadata.getClassName();
@@ -251,7 +253,8 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
 
         String[] qualifiers = getQualifiers(attributes);
         if (ObjectUtils.isEmpty(qualifiers)) {
-            qualifiers = new String[]{contextId + "FeignClient"};
+            // 取消注册别名
+//            qualifiers = new String[]{contextId + "FeignClient"};
         }
 
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className, qualifiers);
@@ -423,7 +426,7 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
     }
 
     private void registerClientConfiguration(BeanDefinitionRegistry registry, Object name, Object configuration) {
-        if (beanFactory.containsBean(name.toString())) {
+        if (beanFactory.containsBean(name + "." + FeignClientSpecification.class.getSimpleName())) {
             // 包含说明 FeignClientSpecification 已经注册
             // 我们可以消除 spring.main.allow-bean-definition-overriding=true 这个配置
             return;
@@ -470,16 +473,47 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
     @SuppressWarnings("unchecked")
     private String getNamespace(String serviceId) {
         // TODO not work now !!!
-        Map<String, List<String>> map = (Map<String, List<String>>) environment.getProperty(PREFIX + ".mappings", Map.class);
-        if (map != null) {
-            for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-                for (String svc : entry.getValue()) {
-                    if (Objects.equals(serviceId, svc)) {
-                        return entry.getKey();
-                    }
+        // freeman.discovery.k8s.mappings.api[0]
+        List<PropertySource<?>> sources = ((AbstractEnvironment) environment).getPropertySources()
+                .stream()
+                .filter(propertySource -> propertySource instanceof OriginTrackedMapPropertySource)
+                .collect(Collectors.toList());
+        if (sources.isEmpty()) {
+            return DEFAULT_NAMESPACE;
+        }
+
+        // TODO 配置暂时只支持配置在 application.yml 或者 application.properties
+        PropertySource<?> source = sources.stream()
+                .filter(ps -> {
+                    return ps.getName().contains("application.yml")
+                            || ps.getName().contains("application.properties");
+                }).collect(Collectors.toList()).get(0);
+
+        // namespace -> 个数
+        Map<String, Long> collect = ((Map<String, Object>) source.getSource()).keySet().stream()
+                .filter(s -> s.startsWith(PREFIX + ".mappings"))
+                .map(s -> ReUtil.getGroup1("mappings\\.(.*)\\[\\d+\\]", s))
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        Map<String, Set<String>> namespaceServicesMap = new HashMap<>();
+        collect.forEach((ns, count) -> {
+            Set<String> set = new LinkedHashSet<>();
+            for (int i = 0; i < count; i++) {
+                String svc = environment.getProperty(PREFIX + ".mappings." + ns + ".[" + i + "]");
+                set.add(svc);
+            }
+            namespaceServicesMap.put(ns, set);
+        });
+
+
+        for (Map.Entry<String, Set<String>> entry : namespaceServicesMap.entrySet()) {
+            for (String svc : entry.getValue()) {
+                if (Objects.equals(serviceId, svc)) {
+                    return entry.getKey();
                 }
             }
         }
+
         return DEFAULT_NAMESPACE;
     }
 

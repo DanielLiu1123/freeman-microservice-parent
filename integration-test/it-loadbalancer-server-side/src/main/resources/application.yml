@@ -12,6 +12,7 @@ freeman:
         api:
           - user
           - order
+          - server-side
         gateway:
           - inner-gateway
           - outer-gateway

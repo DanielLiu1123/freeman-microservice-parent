@@ -13,8 +13,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
             <groupId>cn.liumouren</groupId>
-            <artifactId>freeman-openfeign-boot-starter</artifactId>
+            <artifactId>freeman-openfeign-lb-server-side-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.liumouren</groupId>

@@ -245,6 +245,16 @@
                 <artifactId>freeman-gateway-lb-client-side-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-openfeign-lb-server-side-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-openfeign-lb-client-side-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
             <!-- inner end -->
         </dependencies>
     </dependencyManagement>

@@ -196,10 +196,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
 
     private void registerFeignClient(BeanDefinitionRegistry registry, AnnotationMetadata annotationMetadata,
                                      Map<String, Object> attributes) {
-        if (beanFactory.containsBean(annotationMetadata.getClassName())) {
-            return;
-        }
-
         String className = annotationMetadata.getClassName();
         Class clazz = ClassUtils.resolveClassName(className, null);
         ConfigurableBeanFactory beanFactory = registry instanceof ConfigurableBeanFactory
@@ -243,7 +239,8 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
 
         String[] qualifiers = getQualifiers(attributes);
         if (ObjectUtils.isEmpty(qualifiers)) {
-            qualifiers = new String[]{contextId + "FeignClient"};
+            // 取消注册别名
+//            qualifiers = new String[]{contextId + "FeignClient"};
         }
 
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className, qualifiers);
@@ -397,7 +394,7 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
     }
 
     private void registerClientConfiguration(BeanDefinitionRegistry registry, Object name, Object configuration) {
-        if (beanFactory.containsBean(name.toString())) {
+        if (beanFactory.containsBean(name + "." + FeignClientSpecification.class.getSimpleName())) {
             // 包含说明 FeignClientSpecification 已经注册
             // 我们可以消除 spring.main.allow-bean-definition-overriding=true 这个配置
             return;

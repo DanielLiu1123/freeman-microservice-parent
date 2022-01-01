@@ -26,20 +26,16 @@ public class DefaultConfigEnvPostProcessorBootTest {
 
     @Autowired
     private Environment environment;
-    @Value("${spring.main.allow-bean-definition-overriding}")
-    private boolean allowOverriding;
     @Value("${feign.okhttp.enabled}")
     private boolean enableOkhttp;
 
     @Test
     public void test_defaultConfigIsWorking() {
-        // 默认配置里为 true, 验证是否生效
-        assertTrue(allowOverriding);
         // 默认配置里为 true, 验证优先级是否正确
         assertFalse(enableOkhttp);
 
         assertEquals("UTF-8", environment.getProperty("server.servlet.encoding.charset"));
-        assertEquals("true", environment.getProperty("spring.main.allow-bean-definition-overriding"));
+        assertNull(environment.getProperty("spring.main.allow-bean-definition-overriding"));
         assertEquals("false", environment.getProperty("feign.okhttp.enabled"));
     }
 

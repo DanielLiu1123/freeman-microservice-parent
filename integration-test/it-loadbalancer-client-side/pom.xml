@@ -22,17 +22,7 @@
         </dependency>
         <dependency>
             <groupId>cn.liumouren</groupId>
-            <artifactId>freeman-openfeign-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>cn.liumouren</groupId>
-                    <artifactId>freeman-server-side-loadbalancer-boot-starter</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>cn.liumouren</groupId>
-            <artifactId>freeman-client-side-loadbalancer-boot-starter</artifactId>
+            <artifactId>freeman-openfeign-lb-client-side-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

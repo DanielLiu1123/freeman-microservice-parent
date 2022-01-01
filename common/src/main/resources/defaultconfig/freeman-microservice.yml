@@ -11,8 +11,6 @@ server:
       encoding: UTF-8
 
 spring:
-  main:
-    allow-bean-definition-overriding: true
   jackson:
     default-property-inclusion: non_null
     serialization:
