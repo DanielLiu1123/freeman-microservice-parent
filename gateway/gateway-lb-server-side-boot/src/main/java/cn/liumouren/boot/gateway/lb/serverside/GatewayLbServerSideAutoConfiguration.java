@@ -37,7 +37,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 public class GatewayLbServerSideAutoConfiguration {
 
     @Bean
-    public BeanFactoryPostProcessor noLoadBalancerClientFilterBeanFactoryPostProcessor() {
+    static BeanFactoryPostProcessor noLoadBalancerClientFilterBeanFactoryPostProcessor() {
         return new BeanFactoryPostProcessor() {
             @Override
             public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {

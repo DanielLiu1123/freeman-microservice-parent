@@ -1,3 +1,21 @@
+# 分布式限流, 需要 spring-boot-starter-data-redis-reactive
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user
+          uri: lb://user
+          predicates:
+            - Path=/*/user/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1   # 令牌填充速率
+                redis-rate-limiter.burstCapacity: 2   # 突发请求数
+                redis-rate-limiter.requestedTokens: 1 # 一个请求消耗令牌数
+                key-resolver: "#{@keyResolver}"
+
+# 单机限流
 freeman:
   gateway:
     rules:

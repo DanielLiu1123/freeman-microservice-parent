@@ -27,7 +27,7 @@ import static cn.liumouren.boot.db.mongodb.MongoDynamicProperties.PREFIX;
 public class MongoDynamicAutoConfiguration {
 
     @Bean
-    public BeanFactoryPostProcessor mongoTemplatePostProcessor() {
+    static BeanFactoryPostProcessor mongoTemplatePostProcessor() {
         return new MongoTemplatePostProcessor();
     }
 

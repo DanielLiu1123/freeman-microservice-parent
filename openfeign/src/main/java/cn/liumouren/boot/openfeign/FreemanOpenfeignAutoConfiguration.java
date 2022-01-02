@@ -10,8 +10,8 @@ import feign.Contract;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 import org.aopalliance.aop.Advice;
+import org.springframework.aop.Advisor;
 import org.springframework.aop.Pointcut;
-import org.springframework.aop.PointcutAdvisor;
 import org.springframework.aop.support.ComposablePointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,22 +87,26 @@ public class FreemanOpenfeignAutoConfiguration {
     }
 
     @Bean
-    public BeanFactoryPostProcessor primerBeanDefinitionPostProcessor() {
+    static BeanFactoryPostProcessor primerBeanDefinitionPostProcessor() {
         return new PrimerBeanDefinitionPostProcessor();
     }
 
+    /**
+     * Advisor 在创建 BeanPostProcessor 时被初始化, 不应该导致 FreemanOpenfeignAutoConfiguration 过早初始化, 所以加上 static
+     * <p> 控制台会打印 Bean 'xxx' of type [xxx] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+     */
     @Bean
-    public PointcutAdvisor dealControllerAndApiPointcutAdvisor() {
+    static Advisor dealControllerAndApiPointcutAdvisor() {
         Advice advice = new InvokeMethodInterceptor();
 
         // 我们对 FeignClient bean 做一些扩展处理
         // 但是我们需要排除 Controller
-        Pointcut pointcut = new ComposablePointcut(this::isApiAndNotController);
+        Pointcut pointcut = new ComposablePointcut(FreemanOpenfeignAutoConfiguration::isApiAndNotController);
 
         return new DefaultPointcutAdvisor(pointcut, advice);
     }
 
-    private boolean isApiAndNotController(Class<?> clazz) {
+    private static boolean isApiAndNotController(Class<?> clazz) {
         return AnnotationUtils.findAnnotation(clazz, FeignClient.class) != null
                 && AnnotationUtils.findAnnotation(clazz, Controller.class) == null;
     }
