@@ -5,7 +5,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.liumouren.boot.lb.clientside.component.SmartFeignBlockingLoadBalancerClient;
 import cn.liumouren.boot.lb.clientside.model.K8sServiceInstance;
 import feign.okhttp.OkHttpClient;
-import lombok.var;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.cache.Cache;

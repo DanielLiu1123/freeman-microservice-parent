@@ -13,6 +13,12 @@
     <artifactId>freeman-openfeign-boot</artifactId>
 
    <dependencies>
+       <!-- 需要在 spring-cloud-starter-openfeign 之前 -->
+       <dependency>
+           <groupId>cn.liumouren</groupId>
+           <artifactId>freeman-client-side-loadbalancer-boot-starter</artifactId>
+           <scope>test</scope>
+       </dependency>
        <dependency>
            <groupId>org.springframework.cloud</groupId>
            <artifactId>spring-cloud-starter-openfeign</artifactId>
