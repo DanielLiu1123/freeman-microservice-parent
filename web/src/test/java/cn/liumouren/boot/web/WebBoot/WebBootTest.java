@@ -3,13 +3,16 @@ package cn.liumouren.boot.web.WebBoot;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.liumouren.boot.common.exception.BizException;
 import cn.liumouren.boot.common.exception.WebException;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,7 +75,8 @@ public class WebBootTest {
     static class WebBootConfiguration {
 
         @Bean
-        public RestTemplate restTemplate() {
+        @SneakyThrows
+        public RestTemplate restTemplate(@Value("classpath:application.yml") Resource resource) {
             return new RestTemplate();
         }
 

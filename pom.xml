@@ -39,8 +39,8 @@
     <properties>
         <!-- 前三位为 spring boot 版本, 后面一位为扩展版本 -->
         <revision>2.4.6.1</revision>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- plugins -->
