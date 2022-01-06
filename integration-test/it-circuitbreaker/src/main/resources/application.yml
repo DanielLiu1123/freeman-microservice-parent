@@ -1,0 +1,36 @@
+server:
+  port: 80
+spring:
+  application:
+    name: circuit-breaker-app
+feign:
+  circuitbreaker:
+    enabled: true
+  sentinel:
+    default-rule: default
+    rules:
+      # global feign client
+      default:
+        - grade: 2
+          count: 1
+          timeWindow: 2
+          minRequestAmount: 1
+          statIntervalMs: 1000
+      # specific feign client
+      user:
+        - grade: 2
+          count: 1
+          timeWindow: 2
+          minRequestAmount: 1
+          statIntervalMs: 1000
+      # specific feign client single method
+      "[UserApi#ok(boolean)]":
+        - grade: 2
+          count: 1
+          timeWindow: 1
+          statIntervalMs: 1000
+          minRequestAmount: 1
+freeman:
+  web:
+    log:
+      enable: false

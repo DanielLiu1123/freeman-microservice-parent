@@ -15,6 +15,7 @@
         <module>loadbalancer</module>
         <module>gateway</module>
         <module>messaging</module>
+        <module>circuitbreaker</module>
     </modules>
 
     <parent>
@@ -53,7 +54,7 @@
         <spotbugs.version>4.5.0</spotbugs.version>
 
         <!-- dependencies -->
-        <spring-cloud.version>2020.0.3</spring-cloud.version>
+        <spring-cloud.version>2020.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <fastjson.version>1.2.78</fastjson.version>
         <hutool.version>5.7.16</hutool.version>
@@ -197,6 +198,16 @@
             <dependency>
                 <groupId>cn.liumouren</groupId>
                 <artifactId>freeman-gateway-lb-client-side-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-circuitbreaker-boot</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.liumouren</groupId>
+                <artifactId>freeman-circuitbreaker-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <!-- inner starter -->

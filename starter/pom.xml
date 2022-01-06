@@ -21,6 +21,7 @@
         <module>freeman-gateway-lb-server-side-boot-starter</module>
         <module>freeman-openfeign-lb-client-side-boot-starter</module>
         <module>freeman-openfeign-lb-server-side-boot-starter</module>
+        <module>freeman-circuitbreaker-boot-starter</module>
     </modules>
 
     <artifactId>starter</artifactId>
