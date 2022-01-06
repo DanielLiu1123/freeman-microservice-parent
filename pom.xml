@@ -63,7 +63,7 @@
 
         <!-- 开关 -->
         <spotbugs.skip>true</spotbugs.skip>
-        <githook.plugin.skip>false</githook.plugin.skip>
+        <githook.plugin.skip>true</githook.plugin.skip>
     </properties>
 
     <dependencies>
