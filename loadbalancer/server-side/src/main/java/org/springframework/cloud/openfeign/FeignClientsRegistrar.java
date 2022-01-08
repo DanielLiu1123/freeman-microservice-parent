@@ -84,6 +84,8 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
 
     private BeanFactory beanFactory;
 
+    private Map<String,Set<String>> namespaceServicesMap;
+
     FeignClientsRegistrar() {
     }
 
@@ -266,19 +268,31 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
     private void processUrl(AnnotationMetadata annotationMetadata, Map<String, Object> attributes) {
         // if 'url' not set, we use attr 'name'
         // because we use server-side load-balance
-        // 对于没有 @Namespace 注解的 api, 我们可以通过配置文件手动配置, 但是优先使用 @Namespace 上的值
+        // 对于没有 @Namespace 注解的 api, 我们可以通过配置文件手动配置
         if (attributes != null && !StringUtils.hasText(attributes.get("url").toString())) {
-            // 先检查配置
             String serviceId = attributes.get("value").toString();
-            if (StringUtils.hasText(serviceId)) {
-                attributes.put("url", "http://" + serviceId + "." + getNamespace(serviceId));
-            }
-            // 再检查 @Namespace 注解
+            String namespace = DEFAULT_NAMESPACE;
+            // 先检查 @Namespace 注解
             if (annotationMetadata.hasAnnotation(Namespace.class.getName())) {
-                String namespace = annotationMetadata.getAnnotationAttributes(Namespace.class.getName()).get("value").toString();
-                attributes.put("url", "http://" + serviceId + "." + namespace);
+                namespace = annotationMetadata.getAnnotationAttributes(Namespace.class.getName()).get("value").toString();
+            }
+            // 再检查配置, 控制权在调用方
+            if (StringUtils.hasText(serviceId) && configuredFor(serviceId)) {
+                namespace = namespaceFor(serviceId);
+            }
+            attributes.put("url", "http://" + serviceId + "." + namespace);
+        }
+    }
+
+    private boolean configuredFor(String serviceId) {
+        for (Map.Entry<String, Set<String>> entry : namespaceServicesMap.entrySet()) {
+            for (String svc : entry.getValue()) {
+                if (Objects.equals(serviceId, svc)) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
     private void validate(Map<String, Object> attributes) {
@@ -441,6 +455,7 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+        initMap();
     }
 
     /**
@@ -471,15 +486,17 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
     }
 
     @SuppressWarnings("unchecked")
-    private String getNamespace(String serviceId) {
-        // TODO not work now !!!
+    private void initMap() {
+        if (namespaceServicesMap == null) {
+            namespaceServicesMap = new HashMap<>();
+        }
         // freeman.discovery.k8s.mappings.api[0]
         List<PropertySource<?>> sources = ((AbstractEnvironment) environment).getPropertySources()
                 .stream()
                 .filter(propertySource -> propertySource instanceof OriginTrackedMapPropertySource)
                 .collect(Collectors.toList());
         if (sources.isEmpty()) {
-            return DEFAULT_NAMESPACE;
+            return;
         }
 
         // TODO 配置暂时只支持配置在 application.yml 或者 application.properties
@@ -495,7 +512,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
                 .map(s -> ReUtil.getGroup1("mappings\\.(.*)\\[\\d+\\]", s))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        Map<String, Set<String>> namespaceServicesMap = new HashMap<>();
         collect.forEach((ns, count) -> {
             Set<String> set = new LinkedHashSet<>();
             for (int i = 0; i < count; i++) {
@@ -504,8 +520,9 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
             }
             namespaceServicesMap.put(ns, set);
         });
+    }
 
-
+    private String namespaceFor(String serviceId) {
         for (Map.Entry<String, Set<String>> entry : namespaceServicesMap.entrySet()) {
             for (String svc : entry.getValue()) {
                 if (Objects.equals(serviceId, svc)) {
@@ -513,7 +530,6 @@ class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactor
                 }
             }
         }
-
         return DEFAULT_NAMESPACE;
     }
 

@@ -107,18 +107,7 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
     private void populateMappings() {
         Map<String, String> serviceNamespaceMapping = new HashMap<>();
 
-        // 先找配置文件
-        if (properties.getMappings() != null) {
-            for (Map.Entry<String, List<String>> namespaceServices : properties.getMappings().entrySet()) {
-                if (namespaceServices != null) {
-                    for (String svc : namespaceServices.getValue()) {
-                        serviceNamespaceMapping.put(svc, namespaceServices.getKey());
-                    }
-                }
-            }
-        }
-
-        // 再找 @Namespace 注解, 会覆盖配置文件
+        // 先找 @Namespace 注解
         List<String> feigns = getFeignClientBeanNames(applicationContext);
         for (String feign : feigns) {
             try {
@@ -131,6 +120,17 @@ public class K8sDiscoveryClient implements DiscoveryClient, ApplicationContextAw
                     serviceNamespaceMapping.put(svc.toString(), ns.toString());
                 }
             } catch (ClassNotFoundException ignored) {
+            }
+        }
+
+        // 再找配置文件, 会覆盖 @Namespace 注解
+        if (properties.getMappings() != null) {
+            for (Map.Entry<String, List<String>> namespaceServices : properties.getMappings().entrySet()) {
+                if (namespaceServices != null) {
+                    for (String svc : namespaceServices.getValue()) {
+                        serviceNamespaceMapping.put(svc, namespaceServices.getKey());
+                    }
+                }
             }
         }
 
