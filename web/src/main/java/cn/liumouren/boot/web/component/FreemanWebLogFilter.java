@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 public class FreemanWebLogFilter extends OncePerRequestFilter implements Ordered {
 
-    private final ThreadLocal<Long> local = new ThreadLocal<>();
+    private static final ThreadLocal<Long> local = new ThreadLocal<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FreemanWebLogFilter.class);
 
@@ -40,25 +40,33 @@ public class FreemanWebLogFilter extends OncePerRequestFilter implements Ordered
 
         try {
             chain.doFilter(request, response);
-            // 正常请求
-            LOGGER.info("app: {}, uri: {}, consuming: {}",
-                    fromApp,
-                    uri,
-                    System.currentTimeMillis() - local.get()
-            );
+            logSuccess(fromApp, uri);
         } catch (IOException | ServletException e) {
-            // 执行链异常, 还是打印出请求信息
-            LOGGER.info("app: {}, uri: {}, consuming: {}, cause: {}",
-                    fromApp,
-                    uri,
-                    System.currentTimeMillis() - local.get(),
-                    e.getCause().toString()
-            );
+            logFail(fromApp, uri, e);
             throw e;
         } finally {
             // remove
             local.remove();
         }
+    }
+
+    private void logFail(String fromApp, String uri, Exception e) {
+        // 执行链异常, 还是打印出请求信息
+        LOGGER.info("app: {}, uri: {}, consuming: {}, cause: {}",
+                fromApp,
+                uri,
+                System.currentTimeMillis() - local.get(),
+                e.getCause().toString()
+        );
+    }
+
+    private void logSuccess(String fromApp, String uri) {
+        // 正常请求
+        LOGGER.info("app: {}, uri: {}, consuming: {}",
+                fromApp,
+                uri,
+                System.currentTimeMillis() - local.get()
+        );
     }
 
     @Override
