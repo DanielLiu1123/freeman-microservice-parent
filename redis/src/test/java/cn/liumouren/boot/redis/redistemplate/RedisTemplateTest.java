@@ -1,15 +1,10 @@
 package cn.liumouren.boot.redis.redistemplate;
 
-import cn.liumouren.boot.redis.RedisTemplateUtil;
+import cn.liumouren.boot.redis.RedisCacheCandidates;
 import cn.liumouren.boot.redis.RedisUtil;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -18,13 +13,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -39,49 +32,63 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 )
 public class RedisTemplateTest {
 
-    @Autowired
-    private RedisUtil<User> redisUtil;
-    @Autowired
-    private RedisUtil<Admin> adminRedisUtil;
+    @Test
+    public void test_checkRedisUtil() {
+        System.out.println(RedisUtil.getDefaultTemplate());
+        System.out.println(RedisUtil.getMappings());
+    }
 
     @Test
-    public void test_json() {
+    public void test_value() {
         User user = new User()
                 .setAge(21)
                 .setBirthday(LocalDateTime.now())
                 .setCreateTime(new Date())
                 .setSex(Sex.MALE)
+                .setBobbies(new ArrayList<>(List.of("gril", "programming")))
+                .setMeta(new HashMap<>(Map.of("word", "hello")))
                 .setName("freeman");
 
-        redisUtil.set("freeman", user);
+        RedisUtil.set("freeman", user);
 
-        User freeman = redisUtil.get("freeman");
-        assertNull(freeman.getBobby());
+        User freeman = RedisUtil.get("freeman", User.class);
+        System.out.println(freeman);
+        assertEquals(2, freeman.getBobbies().size());
+        assertEquals(1, freeman.getMeta().size());
         assertEquals(21, freeman.getAge());
         assertEquals(Sex.MALE, freeman.getSex());
     }
 
+
     @Test
-    public void test_redisUtil() {
+    public void test_hash() {
         User user = new User()
                 .setAge(21)
                 .setBirthday(LocalDateTime.now())
                 .setCreateTime(new Date())
                 .setSex(Sex.MALE)
+                .setBobbies(new ArrayList<>(List.of("gril", "programming")))
+                .setMeta(new HashMap<>(Map.of("word", "hello")))
                 .setName("freeman");
-        // 模拟 user 表中插入 id 为 1 的数据
-        redisUtil.put("user", "1", user);
-        User u = redisUtil.hget("user", "1");
-        assertEquals(user.birthday, u.getBirthday());
-
-        adminRedisUtil.set(
-                "hhh",
-                new Admin()
-                        .setAge(21)
-                        .setBirthday(LocalDateTime.now())
-                        .setCreateTime(new Date()).setBobby("girl"));
+        RedisUtil.put("user", "1", user);
+        User u = RedisUtil.hget("user", "1", User.class);
+        System.out.println(u);
+        assertEquals(2, u.getBobbies().size());
     }
 
+    @Test
+    public void test_adminRedis() {
+        Admin adm = new Admin()
+                .setName("daniel")
+                .setAge(21)
+                .setBirthday(LocalDateTime.now())
+                .setCreateTime(new Date())
+                .setBobby("girl");
+        RedisUtil.set("admin", adm);
+        Admin admin = RedisUtil.get("admin", Admin.class);
+        System.out.println(admin);
+        assertEquals(21, admin.getAge());
+    }
 
     @Configuration
     @EnableAutoConfiguration
@@ -97,13 +104,9 @@ public class RedisTemplateTest {
             return new LettuceConnectionFactory(configuration);
         }
 
-//        @Bean
-        public RedisTemplate<String, User> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            mapper.registerModule(new JavaTimeModule());
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            return RedisTemplateUtil.build(redisConnectionFactory, User.class, mapper);
+        @Bean
+        public RedisCacheCandidates redisCandidate() {
+            return () -> Set.of(User.class, Admin.class);
         }
 
     }
@@ -116,8 +119,9 @@ public class RedisTemplateTest {
         private LocalDateTime birthday;
         private Date createTime;
         private Integer age;
-        private String bobby;
+        private List<String> bobbies;
         private Sex sex;
+        private Map<String, String> meta;
     }
 
     @Data
@@ -134,4 +138,5 @@ public class RedisTemplateTest {
     enum Sex {
         MALE, FEMALE
     }
+
 }

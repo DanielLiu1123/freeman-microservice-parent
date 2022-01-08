@@ -1,27 +1,37 @@
 package cn.liumouren.boot.redis;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * redis 工具类, 我们项目里不应该直接依赖 {@link RedisTemplate}
  *
  * @author <a href="mailto:freemanliu.me@gmail.com">freeman</a>
  * @date 2021/12/4 12:27 PM
- * @param <T> 操作类型
  */
-@Getter
-@Setter
-public class RedisUtil<T> {
-    private RedisTemplate<String, T> template;
+@SuppressWarnings("all")
+public final class RedisUtil {
 
-    public RedisUtil(RedisTemplate<String, T> template) {
-        this.template = template;
+    private RedisUtil() {
+    }
+
+    private static RedisTemplate defaultTemplate;
+
+    private static Map<Class, RedisTemplate> mappings;
+
+    public static void setTemplates(RedisTemplate defaultTemplate, List<RedisTemplate> templates) {
+        RedisUtil.defaultTemplate = defaultTemplate;
+        RedisUtil.mappings = templates.stream()
+                .collect(Collectors.toMap(RedisTemplateUtil::getValueType, Function.identity()));
     }
 
     /**
@@ -31,8 +41,8 @@ public class RedisUtil<T> {
      * @param key key
      * @param value value
      */
-    public void set(String key, T value) {
-        template.opsForValue().set(key, value);
+    public static <T> void set(String key, T value) {
+        chose(value.getClass()).opsForValue().set(key, value);
     }
 
     /**
@@ -43,8 +53,8 @@ public class RedisUtil<T> {
      * @param value value
      * @param ttl 过期时间
      */
-    public void set(String key, T value, Duration ttl) {
-        template.opsForValue().set(key, value, ttl);
+    public static <T> void set(String key, T value, Duration ttl) {
+        chose(value.getClass()).opsForValue().set(key, value, ttl);
     }
 
     /**
@@ -54,9 +64,11 @@ public class RedisUtil<T> {
      * @param key key
      * @return T
      */
-    public T get(String key) {
-        return template.opsForValue().get(key);
+    public static <T> T get(String key, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return cast(template.opsForValue().get(key), clz, template);
     }
+
 
     // ================== hash 操作 ====================
 
@@ -67,8 +79,9 @@ public class RedisUtil<T> {
      * @param key key
      * @param map map
      */
-    public void putAll(String key, Map<String, T> map) {
-        template.opsForHash().putAll(key, map);
+    public static <T> void putAll(String key, Map<String, T> map, Class<T> clz) {
+        // map may empty
+        chose(clz).opsForHash().putAll(key, map);
     }
 
     /**
@@ -79,8 +92,8 @@ public class RedisUtil<T> {
      * @param hashKey hashKey
      * @param t T
      */
-    public void put(String key, String hashKey, T t) {
-        template.opsForHash().put(key, hashKey, t);
+    public static <T> void put(String key, String hashKey, T t) {
+        chose(t.getClass()).opsForHash().put(key, hashKey, t);
     }
 
     /**
@@ -91,9 +104,9 @@ public class RedisUtil<T> {
      * @param hashKey hashKey
      * @return T
      */
-    @SuppressWarnings("unchecked")
-    public T hget(String key, String hashKey) {
-        return (T) template.opsForHash().get(key, hashKey);
+    public static <T> T hget(String key, String hashKey, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return cast(template.opsForHash().get(key, hashKey), clz, template);
     }
 
     // ================== 通用操作 ====================
@@ -104,8 +117,9 @@ public class RedisUtil<T> {
      * @param key key
      * @return 是否删除成功
      */
-    public Boolean delete(String key) {
-        return template.delete(key);
+    public static Boolean delete(String key) {
+        // use same connect factory
+        return defaultTemplate.delete(key);
     }
 
     /**
@@ -115,8 +129,8 @@ public class RedisUtil<T> {
      * @param ttl 存活时间
      * @return 是否设置成功
      */
-    public Boolean expire(String key, Duration ttl) {
-        return template.expire(key, ttl);
+    public static Boolean expire(String key, Duration ttl) {
+        return defaultTemplate.expire(key, ttl);
     }
 
     /**
@@ -126,8 +140,37 @@ public class RedisUtil<T> {
      * @param date Date
      * @return 是否设置成功
      */
-    public Boolean expire(String key, Date date) {
-        return template.expireAt(key, date);
+    public static Boolean expire(String key, Date date) {
+        return defaultTemplate.expireAt(key, date);
+    }
+
+    public static RedisTemplate getDefaultTemplate() {
+        return defaultTemplate;
+    }
+
+    public static Map<Class, RedisTemplate> getMappings() {
+        return mappings;
+    }
+
+    private static RedisTemplate chose(Class clz) {
+        RedisTemplate template = mappings.get(clz);
+        return template != null ? template : defaultTemplate;
+    }
+
+    /**
+     * Transform object according to the RedisTemplate serialization configuration
+     *
+     * @param o o
+     * @param clz target type
+     * @param template RedisTemplate
+     */
+    private static <T> T cast(Object o, Class<T> clz, RedisTemplate template) {
+        if (o instanceof JSONObject) {
+            FastJsonConfig config = RedisTemplateUtil.getFastJsonConfig(template);
+            String json = JSON.toJSONString(o, config.getSerializeConfig());
+            o = JSON.parseObject(json, clz, config.getParserConfig());
+        }
+        return (T) o;
     }
 
 }
