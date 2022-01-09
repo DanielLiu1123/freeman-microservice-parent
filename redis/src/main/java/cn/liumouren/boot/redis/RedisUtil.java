@@ -1,14 +1,13 @@
 package cn.liumouren.boot.redis;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.time.Duration;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,6 +32,8 @@ public final class RedisUtil {
         RedisUtil.mappings = templates.stream()
                 .collect(Collectors.toMap(RedisTemplateUtil::getValueType, Function.identity()));
     }
+
+    // ================== value 操作 ====================
 
     /**
      * value
@@ -66,7 +67,7 @@ public final class RedisUtil {
      */
     public static <T> T get(String key, Class<T> clz) {
         RedisTemplate template = chose(clz);
-        return cast(template.opsForValue().get(key), clz, template);
+        return castOne(template.opsForValue().get(key), clz, template);
     }
 
 
@@ -79,9 +80,13 @@ public final class RedisUtil {
      * @param key key
      * @param map map
      */
-    public static <T> void putAll(String key, Map<String, T> map, Class<T> clz) {
-        // map may empty
-        chose(clz).opsForHash().putAll(key, map);
+    public static <T> void putAll(String key, Map<String, T> map) {
+        notNullForMap(map);
+        if (map.isEmpty()) {
+            defaultTemplate.opsForHash().putAll(key, map);
+            return;
+        }
+        chose(map.values().iterator().next().getClass()).opsForHash().putAll(key, map);
     }
 
     /**
@@ -106,8 +111,112 @@ public final class RedisUtil {
      */
     public static <T> T hget(String key, String hashKey, Class<T> clz) {
         RedisTemplate template = chose(clz);
-        return cast(template.opsForHash().get(key, hashKey), clz, template);
+        return castOne(template.opsForHash().get(key, hashKey), clz, template);
     }
+
+
+    // ================== List操作 ====================
+
+    public static <T> T leftPop(String key, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return castOne(template.opsForList().leftPop(key), clz, template);
+    }
+
+    public static <T> T leftPop(String key, Class<T> clz, Duration timeout) {
+        RedisTemplate template = chose(clz);
+        return castOne(template.opsForList().leftPop(key, timeout), clz, template);
+    }
+
+    public static <T> Long leftPush(String key, T t) {
+        RedisTemplate template = chose(t.getClass());
+        return template.opsForList().leftPush(key, t);
+    }
+
+    public static <T> Long leftPushAll(String key, Collection<T> values) {
+        notNullForCollection(values);
+        if (values.isEmpty()) {
+            return defaultTemplate.opsForList().leftPushAll(key, values);
+        }
+        RedisTemplate template = chose(values.iterator().next().getClass());
+        return template.opsForList().leftPushAll(key, values);
+    }
+
+    public static <T> T rightPop(String key, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return castOne(template.opsForList().rightPop(key), clz, template);
+    }
+
+    public static <T> T rightPop(String key, Class<T> clz, Duration timeout) {
+        RedisTemplate template = chose(clz);
+        return castOne(template.opsForList().rightPop(key, timeout), clz, template);
+    }
+
+    public static <T> Long rightPush(String key, T t) {
+        RedisTemplate template = chose(t.getClass());
+        return template.opsForList().rightPush(key, t);
+    }
+
+    public static <T> Long rightPushAll(String key, Collection<T> values) {
+        notNullForCollection(values);
+        if (values.isEmpty()) {
+            return defaultTemplate.opsForList().rightPushAll(key, values);
+        }
+        RedisTemplate template = chose(values.iterator().next().getClass());
+        return template.opsForList().rightPushAll(key, values);
+    }
+
+    public static Long sizeForList(String key) {
+        return defaultTemplate.opsForList().size(key);
+    }
+
+    public static <T> List<T> range(String key, long start, long end, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return castMany(template.opsForList().range(key, start, end), clz, template);
+    }
+
+
+    // ================== Set 操作 ====================
+
+    public static <T> Long add(String key, T value) {
+        RedisTemplate template = chose(value.getClass());
+        return template.opsForSet().add(key, value);
+    }
+
+    /**
+     *
+     * @return the number of removed elements.
+     */
+    public static <T> Long remove(String key, T... values) {
+        if (values == null || values.length == 0) {
+            return 0L;
+        }
+        RedisTemplate template = chose(values[0].getClass());
+        return template.opsForSet().remove(key, values);
+    }
+
+    public static <T> Set<T> members(String key, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return new HashSet<>(castMany(template.opsForSet().members(key), clz, template));
+    }
+
+    public static <T> Set<T> difference(Collection<String> keys, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return new HashSet<>(castMany(template.opsForSet().difference(keys), clz, template));
+    }
+
+    public static <T> Set<T> intersect(Collection<String> keys, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return new HashSet<>(castMany(template.opsForSet().intersect(keys), clz, template));
+    }
+
+    public static Long sizeForSet(String key) {
+        return defaultTemplate.opsForSet().size(key);
+    }
+
+    // TODO
+    // ================== Zset 操作 ====================
+    // ================== hyperloglog 操作 ====================
+
 
     // ================== 通用操作 ====================
 
@@ -120,6 +229,10 @@ public final class RedisUtil {
     public static Boolean delete(String key) {
         // use same connect factory
         return defaultTemplate.delete(key);
+    }
+
+    public static Long delete(String... key) {
+        return defaultTemplate.delete(Arrays.asList(key));
     }
 
     /**
@@ -164,13 +277,50 @@ public final class RedisUtil {
      * @param clz target type
      * @param template RedisTemplate
      */
-    private static <T> T cast(Object o, Class<T> clz, RedisTemplate template) {
-        if (o instanceof JSONObject) {
-            FastJsonConfig config = RedisTemplateUtil.getFastJsonConfig(template);
-            String json = JSON.toJSONString(o, config.getSerializeConfig());
-            o = JSON.parseObject(json, clz, config.getParserConfig());
+    private static <T> T castOne(Object o, Class<T> clz, RedisTemplate template) {
+        if (o.getClass() != clz && Map.class.isAssignableFrom(o.getClass())) {
+            // need parse again
+            RedisSerializer serializer = template.getDefaultSerializer();
+            if (serializer instanceof FastJsonRedisSerializer) {
+                FastJsonConfig config = RedisTemplateUtil.getFastJsonConfig(template);
+                String json = JSON.toJSONString(o, config.getSerializeConfig());
+                o = JSON.parseObject(json, clz, config.getParserConfig());
+            }
         }
         return (T) o;
+    }
+
+    private static <T> List<T> castMany(Collection coll, Class<T> clz, RedisTemplate template) {
+        if (coll == null) {
+            return null;
+        }
+        if (coll.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Class<?> elementClass = coll.iterator().next().getClass();
+        if (elementClass != clz && Map.class.isAssignableFrom(elementClass)) {
+            // need parse again
+            RedisSerializer serializer = template.getDefaultSerializer();
+            if (serializer instanceof FastJsonRedisSerializer) {
+                FastJsonConfig config = RedisTemplateUtil.getFastJsonConfig(template);
+                String json = JSON.toJSONString(coll, config.getSerializeConfig());
+                return JSON.parseArray(json, clz, config.getParserConfig());
+            }
+        }
+        return new ArrayList<>(coll);
+    }
+
+    private static void notNullForCollection(Collection values) {
+        if (values == null) {
+            throw new IllegalArgumentException("Collection can't be null");
+        }
+    }
+
+    private static <T> void notNullForMap(Map map) {
+        if (map == null) {
+            throw new IllegalArgumentException("Map can't be null");
+        }
     }
 
 }
