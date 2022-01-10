@@ -1,7 +1,6 @@
-package cn.liumouren.boot.db.mongodb;
+package cn.liumouren.boot.db.mongodb.model;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *

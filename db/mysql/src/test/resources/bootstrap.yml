@@ -1,0 +1,7 @@
+embedded:
+  containers:
+    force-shutdown: false
+  mysql:
+    password: root
+    user: root
+    init-script-path: sql/init.sql

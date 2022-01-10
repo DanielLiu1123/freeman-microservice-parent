@@ -9,10 +9,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -149,22 +145,12 @@ public class RedisUtilTest {
         assertEquals(1, intersect.size());
 
         // remove
-        assertEquals(1,  RedisUtil.remove("set", user1));
+        assertEquals(1, RedisUtil.remove("set", user1));
     }
 
     @Configuration
     @EnableAutoConfiguration
     static class Config {
-
-        @Bean
-        public RedisConnectionFactory connectionFactory() {
-            RedisStandaloneConfiguration configuration =
-                    new RedisStandaloneConfiguration("106.54.76.182", 6379);
-            configuration.setDatabase(10);
-            configuration.setPassword(RedisPassword.of("llw1123"));
-
-            return new LettuceConnectionFactory(configuration);
-        }
 
         @Bean
         public RedisCacheCandidates redisCandidate() {

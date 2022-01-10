@@ -74,7 +74,7 @@ public class MongoTemplatePostProcessor implements BeanFactoryPostProcessor {
         // 填充映射关系
         populateMappings(converter, properties, mappings, templateMappings);
 
-        dynamicMongoTemplate.setTemplateMappings(templateMappings);
+        dynamicMongoTemplate.setDsTemplateMappings(templateMappings);
         dynamicMongoTemplate.setCollectionNameDsMappings(mappings);
         return dynamicMongoTemplate;
     }

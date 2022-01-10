@@ -1,4 +1,4 @@
-package cn.liumouren.boot.db.mongodb;
+package cn.liumouren.boot.db.mongodb.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -20,7 +20,7 @@ public class User {
     private Sex sex;
     private Date birthday;
 
-    enum Sex {
+    public enum Sex {
         MALE, FEMALE
     }
 }

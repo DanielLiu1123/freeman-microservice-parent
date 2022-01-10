@@ -46,7 +46,7 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class DynamicMongoTemplate extends MongoTemplate {
 
-    private Map<String, MongoTemplate> templateMappings;
+    private Map<String, MongoTemplate> dsTemplateMappings;
     private Map<String, String> collectionNameDsMappings;
     private MongoTemplate defaultTemplate;
 
@@ -490,12 +490,16 @@ public class DynamicMongoTemplate extends MongoTemplate {
     public MongoTemplate choose(String collectionName) {
         if (collectionNameDsMappings.containsKey(collectionName)) {
             String ds = collectionNameDsMappings.get(collectionName);
-            if (templateMappings.containsKey(ds)) {
-                return templateMappings.get(ds);
+            if (dsTemplateMappings.containsKey(ds)) {
+                return dsTemplateMappings.get(ds);
             }
         }
         // 使用默认
         return defaultTemplate;
+    }
+
+    public MongoTemplate choose(Class<?> entityClass) {
+        return choose(getCollectionName(entityClass));
     }
 
 }

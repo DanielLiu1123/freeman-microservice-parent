@@ -1,0 +1,7 @@
+embedded:
+  redis:
+    host: localhost
+    port: 6379
+    requirepass: false
+  containers:
+    force-shutdown: true
