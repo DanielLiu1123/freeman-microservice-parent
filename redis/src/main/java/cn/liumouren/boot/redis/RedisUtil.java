@@ -81,7 +81,7 @@ public final class RedisUtil {
      * @param map map
      */
     public static <T> void putAll(String key, Map<String, T> map) {
-        notNullForMap(map);
+        checkNotNull(map);
         if (map.isEmpty()) {
             defaultTemplate.opsForHash().putAll(key, map);
             return;
@@ -133,7 +133,7 @@ public final class RedisUtil {
     }
 
     public static <T> Long leftPushAll(String key, Collection<T> values) {
-        notNullForCollection(values);
+        checkNotNull(values);
         if (values.isEmpty()) {
             return defaultTemplate.opsForList().leftPushAll(key, values);
         }
@@ -157,7 +157,7 @@ public final class RedisUtil {
     }
 
     public static <T> Long rightPushAll(String key, Collection<T> values) {
-        notNullForCollection(values);
+        checkNotNull(values);
         if (values.isEmpty()) {
             return defaultTemplate.opsForList().rightPushAll(key, values);
         }
@@ -311,15 +311,9 @@ public final class RedisUtil {
         return new ArrayList<>(coll);
     }
 
-    private static void notNullForCollection(Collection values) {
-        if (values == null) {
-            throw new IllegalArgumentException("Collection can't be null");
-        }
-    }
-
-    private static <T> void notNullForMap(Map map) {
-        if (map == null) {
-            throw new IllegalArgumentException("Map can't be null");
+    private static void checkNotNull(Object mapOrCollection) {
+        if (mapOrCollection == null) {
+            throw new IllegalArgumentException(mapOrCollection.getClass().getSimpleName() + " can't be null");
         }
     }
 

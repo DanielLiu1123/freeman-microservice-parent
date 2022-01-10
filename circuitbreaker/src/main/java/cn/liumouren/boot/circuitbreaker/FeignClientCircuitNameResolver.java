@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class FeignClientCircuitNameResolver implements CircuitBreakerNameResolver {
 
-    private Map configurations;
+    private final Map configurations;
 
     public FeignClientCircuitNameResolver(CircuitBreakerFactory factory) {
         configurations = getConfigurations(factory);
@@ -28,13 +28,18 @@ public class FeignClientCircuitNameResolver implements CircuitBreakerNameResolve
     @Override
     public String resolveCircuitBreakerName(String feignClientName,
                                             Target<?> target, Method method) {
-        String key = Feign.configKey(target.type(), method);
+        String key = getKey(feignClientName, target, method);
 
         if (configurations != null && configurations.containsKey(key)) {
             return key;
         }
 
         return feignClientName;
+    }
+
+    private String getKey(String feignClientName, Target<?> target, Method method) {
+        String key = Feign.configKey(target.type(), method);
+        return feignClientName + key.substring(key.indexOf('#'));
     }
 
     private Map getConfigurations(CircuitBreakerFactory factory) {

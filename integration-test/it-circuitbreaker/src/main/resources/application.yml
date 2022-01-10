@@ -24,7 +24,7 @@ feign:
           minRequestAmount: 1
           statIntervalMs: 1000
       # specific feign client single method
-      "[UserApi#ok(boolean)]":
+      "[user#ok(boolean)]":
         - grade: 2
           count: 1
           timeWindow: 1
