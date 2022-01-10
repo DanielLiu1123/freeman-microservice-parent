@@ -56,8 +56,9 @@
         <!-- dependencies -->
         <spring-cloud.version>2020.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <fastjson.version>1.2.78</fastjson.version>
+        <fastjson.version>1.2.79</fastjson.version>
         <hutool.version>5.7.16</hutool.version>
+        <guava.version>31.0.1-jre</guava.version>
         <druid-starter.version>1.2.8</druid-starter.version>
         <shardingsphere.version>5.0.0</shardingsphere.version>
 
@@ -104,6 +105,13 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava-bom</artifactId>
+                <version>${guava.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- 统一 JSON 序列化工具 fastjson  -->
