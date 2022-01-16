@@ -11,8 +11,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.redis.core.ZSetOperations.TypedTuple;
+
 /**
  * redis 工具类, 我们项目里不应该直接依赖 {@link RedisTemplate}
+ *
+ * <p> 如果该工具类没有提供你需要的方法, 使用 {@link #chose(Class)} 方法选择正确的 redisTemplate 进行操作
  *
  * @author <a href="mailto:freemanliu.me@gmail.com">freeman</a>
  * @date 2021/12/4 12:27 PM
@@ -20,16 +24,16 @@ import java.util.stream.Collectors;
 @SuppressWarnings("all")
 public final class RedisUtil {
 
-    private RedisUtil() {
-    }
-
     private static RedisTemplate defaultTemplate;
 
-    private static Map<Class, RedisTemplate> mappings;
+    private static Map<Class, RedisTemplate> entityTempalteMappings;
 
-    public static void setTemplates(RedisTemplate defaultTemplate, List<RedisTemplate> templates) {
+    public static void setDefaultTemplate(RedisTemplate defaultTemplate) {
         RedisUtil.defaultTemplate = defaultTemplate;
-        RedisUtil.mappings = templates.stream()
+    }
+
+    public static void setEntityTempalteMappings(List<RedisTemplate> entityTempalteMappings) {
+        RedisUtil.entityTempalteMappings = entityTempalteMappings.stream()
                 .collect(Collectors.toMap(RedisTemplateUtil::getValueType, Function.identity()));
     }
 
@@ -177,23 +181,28 @@ public final class RedisUtil {
 
     // ================== Set 操作 ====================
 
-    public static <T> Long add(String key, T value) {
-        RedisTemplate template = chose(value.getClass());
-        return template.opsForSet().add(key, value);
+    /**
+     * Set operation.
+     * @return the number of added element.
+     */
+    public static <T> Long add(String key, T... values) {
+        RedisTemplate template = chose(values[0].getClass());
+        return template.opsForSet().add(key, values);
     }
 
     /**
-     *
+     * Set operation.
      * @return the number of removed elements.
      */
     public static <T> Long remove(String key, T... values) {
-        if (values == null || values.length == 0) {
-            return 0L;
-        }
+        checkArrayNotEmpty(values);
         RedisTemplate template = chose(values[0].getClass());
         return template.opsForSet().remove(key, values);
     }
 
+    /**
+     * Set operation.
+     */
     public static <T> Set<T> members(String key, Class<T> clz) {
         RedisTemplate template = chose(clz);
         return new HashSet<>(castMany(template.opsForSet().members(key), clz, template));
@@ -213,10 +222,83 @@ public final class RedisUtil {
         return defaultTemplate.opsForSet().size(key);
     }
 
-    // TODO
     // ================== Zset 操作 ====================
+
+
+    public static <T> Boolean zadd(String key, T value, double score) {
+        RedisTemplate template = chose(value.getClass());
+        return template.opsForZSet().add(key, value, score);
+    }
+
+    public static <T> Long zadd(String key, Set<TypedTuple> tuples) {
+        checkNotNull(tuples);
+        if (tuples.isEmpty()) {
+            defaultTemplate.opsForZSet().add(key, tuples);
+        }
+        RedisTemplate template = chose(tuples.iterator().next().getValue().getClass());
+        return template.opsForZSet().add(key, tuples);
+    }
+
+    public static <T> Set<T> zrange(String key, long start, long end, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return new HashSet<>(castMany(template.opsForZSet().range(key, start, end), clz, template));
+    }
+
+    public static <T> Set<T> zreverseRange(String key, long start, long end, Class<T> clz) {
+        RedisTemplate template = chose(clz);
+        return new HashSet<>(castMany(template.opsForZSet().reverseRange(key, start, end), clz, template));
+    }
+
+    /**
+     * @return new score
+     */
+    public static <T> Double zincrementScore(String key, T value, double delta) {
+        RedisTemplate template = chose(value.getClass());
+        return template.opsForZSet().incrementScore(key, value, delta);
+    }
+
+    /**
+     * Determine the index of element with value in a sorted set.
+     * <p> start with 0
+     */
+    public static <T> Long zrank(String key, T value) {
+        RedisTemplate template = chose(value.getClass());
+        return template.opsForZSet().rank(key, value);
+    }
+
+    public static <T> Long zremove(String key, T... values) {
+        checkArrayNotEmpty(values);
+        RedisTemplate template = chose(values[0].getClass());
+        return template.opsForZSet().remove(key, values);
+    }
+
+    public static Long zcount(String key, double min, double max) {
+        return defaultTemplate.opsForZSet().count(key, min, max);
+    }
+
+    public static Long sizeForZset(String key) {
+        return defaultTemplate.opsForZSet().size(key);
+    }
+
+    // TODO
     // ================== hyperloglog 操作 ====================
 
+    /**
+     * @return 如果有值被添加到了 key, 返回 1, 如果没有值被添加到了 key, 返回 0
+     */
+    public static <T> Long pfadd(String key, T... values) {
+        checkArrayNotEmpty(values);
+        RedisTemplate template = chose(values[0].getClass());
+        return template.opsForHyperLogLog().add(key, values);
+    }
+
+    public static Long pfcount(String... key) {
+        return defaultTemplate.opsForHyperLogLog().size(key);
+    }
+
+    public static Long pfmerge(String destination, String... sourceKeys) {
+        return defaultTemplate.opsForHyperLogLog().union(destination, sourceKeys);
+    }
 
     // ================== 通用操作 ====================
 
@@ -261,13 +343,12 @@ public final class RedisUtil {
         return defaultTemplate;
     }
 
-    public static Map<Class, RedisTemplate> getMappings() {
-        return mappings;
+    public static Map<Class, RedisTemplate> getEntityTempalteMappings() {
+        return entityTempalteMappings;
     }
 
-    private static RedisTemplate chose(Class clz) {
-        RedisTemplate template = mappings.get(clz);
-        return template != null ? template : defaultTemplate;
+    public static RedisTemplate chose(Class clz) {
+        return Optional.ofNullable(entityTempalteMappings.get(clz)).orElse(defaultTemplate);
     }
 
     /**
@@ -291,10 +372,7 @@ public final class RedisUtil {
     }
 
     private static <T> List<T> castMany(Collection coll, Class<T> clz, RedisTemplate template) {
-        if (coll == null) {
-            return null;
-        }
-        if (coll.isEmpty()) {
+        if (coll == null || coll.isEmpty()) {
             return new ArrayList<>();
         }
 
@@ -313,7 +391,13 @@ public final class RedisUtil {
 
     private static void checkNotNull(Object mapOrCollection) {
         if (mapOrCollection == null) {
-            throw new IllegalArgumentException(mapOrCollection.getClass().getSimpleName() + " can't be null");
+            throw new IllegalArgumentException(mapOrCollection.getClass().getSimpleName().toLowerCase() + " can't be null");
+        }
+    }
+
+    private static void checkArrayNotEmpty(Object[] values) {
+        if (values == null || values.length == 0) {
+            throw new IllegalArgumentException("can not be empty.");
         }
     }
 

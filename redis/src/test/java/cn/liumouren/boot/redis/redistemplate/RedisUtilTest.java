@@ -32,7 +32,7 @@ public class RedisUtilTest {
     @Test
     public void test_checkRedisUtil() {
         assertNotNull(RedisUtil.getDefaultTemplate());
-        assertNotNull(RedisUtil.getMappings());
+        assertNotNull(RedisUtil.getEntityTempalteMappings());
     }
 
     @Test

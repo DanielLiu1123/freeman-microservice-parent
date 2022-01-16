@@ -55,7 +55,8 @@ public class FreemanRedisAutoConfiguration implements SmartInitializingSingleton
                 templates.add(buildTemplate(factory, defaultTemplate, clz));
             });
         });
-        RedisUtil.setTemplates(defaultTemplate, templates);
+        RedisUtil.setDefaultTemplate(defaultTemplate);
+        RedisUtil.setEntityTempalteMappings(templates);
     }
 
     @SuppressWarnings("all")

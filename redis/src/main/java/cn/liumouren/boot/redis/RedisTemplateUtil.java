@@ -55,7 +55,7 @@ public final class RedisTemplateUtil {
             type.setAccessible(true);
             return (Class) type.get(serializer);
         } catch (Exception e) {
-            return null;
+            throw new IllegalArgumentException("get entity class error.", e);
         }
     }
 
