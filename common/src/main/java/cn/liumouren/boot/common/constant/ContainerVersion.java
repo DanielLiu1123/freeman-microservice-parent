@@ -10,10 +10,10 @@ public interface ContainerVersion {
 
     // TODO complete it!
 
-    String MYSQL = "mysql:8";
+    String MYSQL = "mysql:8.0.27";
 
-    String REDIS = "redis:6.2-alpine";
+    String REDIS = "redis:6.2.6";
 
-    String MONGO = "mongo:5.0-focal";
+    String MONGO = "mongo:5.0.5";
 
 }
