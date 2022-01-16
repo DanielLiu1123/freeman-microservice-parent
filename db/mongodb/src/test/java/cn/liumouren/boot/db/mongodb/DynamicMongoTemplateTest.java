@@ -1,5 +1,6 @@
 package cn.liumouren.boot.db.mongodb;
 
+import cn.liumouren.boot.common.constant.ContainerVersion;
 import cn.liumouren.boot.db.mongodb.core.DynamicMongoTemplate;
 import cn.liumouren.boot.db.mongodb.core.MongoTemplatePostProcessor;
 import cn.liumouren.boot.db.mongodb.model.Order;
@@ -22,7 +23,12 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -41,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Testcontainers
 public class DynamicMongoTemplateTest {
 
     @Autowired
@@ -49,6 +56,17 @@ public class DynamicMongoTemplateTest {
     private UserDao userDao;
     @Autowired
     private OrderDao orderDao;
+
+    @Container
+    static MongoDBContainer mongo = new MongoDBContainer(ContainerVersion.MONGO);
+
+    @DynamicPropertySource
+    static void redisProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri",
+                () -> String.format("mongodb://localhost:%s/freeman_order", mongo.getFirstMappedPort()));
+        registry.add("spring.data.mongodb.dynamic.datasources.ds1.uri",
+                () -> String.format("mongodb://localhost:%s/freeman_user", mongo.getFirstMappedPort()));
+    }
 
 
     @Test
@@ -134,7 +152,9 @@ public class DynamicMongoTemplateTest {
             MongoDatabase userDb = client.getDatabase("freeman_user");
             MongoDatabase orderDb = client.getDatabase("freeman_order");
             userDb.createCollection("user");
+            userDb.createCollection("user_baseinfo");
             userDb.getCollection("user").insertOne(new Document("name", "freeman lau"));
+            userDb.getCollection("user_baseinfo").insertOne(new Document("name", "freeman lau"));
             orderDb.createCollection("order");
             orderDb.getCollection("order").insertOne(new Document("title", "some goods!"));
 

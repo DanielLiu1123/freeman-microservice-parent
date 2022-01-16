@@ -1,6 +1,7 @@
 package cn.liumouren.boot.db.mysql;
 
 
+import cn.liumouren.boot.common.constant.ContainerVersion;
 import cn.liumouren.boot.db.mysql.dao.ProductDao;
 import cn.liumouren.boot.db.mysql.dao.UserDao;
 import cn.liumouren.boot.db.mysql.model.Product;
@@ -16,6 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +38,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Testcontainers
 public class MysqlDynamicDatasourceTest {
+
+    @Container
+    static JdbcDatabaseContainer mongo = new MySQLContainer(ContainerVersion.MYSQL)
+            .withUsername("root").withPassword("root").withInitScript("sql/init.sql");
+
+    @DynamicPropertySource
+    static void redisProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.shardingsphere.datasource.ds-product.jdbc-url",
+                () -> String.format("jdbc:mysql://localhost:%s/freeman_product?serverTimezone=Asia/Shanghai&characterEncoding=utf8", mongo.getFirstMappedPort()));
+        registry.add("spring.shardingsphere.datasource.ds-user.jdbc-url",
+                () -> String.format("jdbc:mysql://localhost:%s/freeman_user?serverTimezone=Asia/Shanghai&characterEncoding=utf8", mongo.getFirstMappedPort()));
+    }
 
     @Autowired
     private UserDao userDao;

@@ -1,4 +1,4 @@
-package cn.liumouren.boot.test.constant;
+package cn.liumouren.boot.common.constant;
 
 /**
  * Container version for testcontainers.

@@ -1,5 +1,6 @@
 package cn.liumouren.boot.redis.redistemplate;
 
+import cn.liumouren.boot.common.constant.ContainerVersion;
 import cn.liumouren.boot.redis.RedisCacheCandidates;
 import cn.liumouren.boot.redis.RedisUtil;
 import lombok.Data;
@@ -9,6 +10,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,12 +33,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "logging.level.org.springframework.data.redis=debug"
         }
 )
+@Testcontainers
 public class RedisUtilTest {
+
+    @Container
+    static GenericContainer mongo = new GenericContainer(ContainerVersion.REDIS)
+            .withExposedPorts(6379);
+
+    @DynamicPropertySource
+    static void postProcessProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.redis.port", () -> mongo.getFirstMappedPort());
+    }
 
     @Test
     public void test_checkRedisUtil() {
         assertNotNull(RedisUtil.getDefaultTemplate());
-        assertNotNull(RedisUtil.getEntityTempalteMappings());
+        assertEquals(2, RedisUtil.getEntityTempalteMappings().size());
     }
 
     @Test

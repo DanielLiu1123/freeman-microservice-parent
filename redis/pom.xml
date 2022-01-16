@@ -30,13 +30,8 @@
 
         <!-- Testing -->
         <dependency>
-            <groupId>com.playtika.testcontainers</groupId>
-            <artifactId>embedded-redis</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <groupId>cn.liumouren</groupId>
+            <artifactId>freeman-common-boot</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

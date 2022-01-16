@@ -1,9 +1,9 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://${embedded.mongodb.host}:${embedded.mongodb.port}/freeman_order
+      uri: mongodb://localhost:27017/freeman_order
       dynamic:
         enable: true
         datasources:
           ds1:
-            uri: mongodb://${embedded.mongodb.host}:${embedded.mongodb.port}/freeman_user
+            uri: mongodb://localhost:27017/freeman_user

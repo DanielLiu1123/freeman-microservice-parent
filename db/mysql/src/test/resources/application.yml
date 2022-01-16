@@ -7,16 +7,16 @@ spring:
       ds-product:
         # sharding-jdbc 使用 key 的 set 方法设值, key 注意与对应数据源配置对应
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://${embedded.mysql.host}:${embedded.mysql.port}/freeman_product?serverTimezone=Asia/Shanghai&characterEncoding=utf8
+        jdbc-url: jdbc:mysql://localhost:3306/freeman_product?serverTimezone=Asia/Shanghai&characterEncoding=utf8
         type: com.zaxxer.hikari.HikariDataSource
-        username: ${embedded.mysql.user}
-        password: ${embedded.mysql.password}
+        username: root
+        password: root
       ds-user:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://${embedded.mysql.host}:${embedded.mysql.port}/freeman_user?serverTimezone=Asia/Shanghai&characterEncoding=utf8
+        jdbc-url: jdbc:mysql://localhost:3306/freeman_user?serverTimezone=Asia/Shanghai&characterEncoding=utf8
         type: com.zaxxer.hikari.HikariDataSource
-        username: ${embedded.mysql.user}
-        password: ${embedded.mysql.password}
+        username: root
+        password: root
     props:
       sql-show: true
     rules:

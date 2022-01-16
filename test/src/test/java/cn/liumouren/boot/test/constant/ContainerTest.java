@@ -11,7 +11,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static cn.liumouren.boot.test.constant.ContainerVersion.MONGO;
+import static cn.liumouren.boot.common.constant.ContainerVersion.MONGO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
