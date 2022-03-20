@@ -72,6 +72,7 @@ import static cn.liumouren.boot.lb.common.FreemanK8sDiscoveryProperties.PREFIX;
  * @author Marcin Grzejszczak
  * @author Olga Maciaszek-Sharma
  * @author Jasbir Singh
+ * @author Freeman
  */
 class FeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactoryAware, ResourceLoaderAware, EnvironmentAware {
 
